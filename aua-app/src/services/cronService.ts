@@ -52,7 +52,7 @@ function logging(log: SysLog) {
 
 function trySetTaskDueDateField(task, dueDay) {
   if (!dueDay) return;
-  const dueDateField = task.fields.find(x => x.name === 'dueDate');
+  const dueDateField = task.fields.find(x => x.name === 'Due_Date');
   if (!dueDateField) return;
   dueDateField.value = moment().add(dueDay, 'day').toDate();
 }
