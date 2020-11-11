@@ -10,7 +10,7 @@ export class CreateAgents1598515321928 implements MigrationInterface {
         await queryRunner.query(`INSERT INTO public."user" (id, email, "givenName", "surname", secret, salt, role, status) 
         VALUES ('5e1ac3a9-9caf-4cf9-9584-b5bd72f36db5', 'info@auao.com.au', '', '', '6cf100208f40a135fe6e82c6d1f96a570b96c9dc4a15637cca0b1ed2fe0e6f6c', 'be19e564-12c8-427d-86b8-71891c63a3a6', 'agent', 'enabled')`);
         await queryRunner.query(`INSERT INTO public."user" (id, email, "givenName", "surname", secret, salt, role, status) 
-        VALUES ('5e1ac3a9-9caf-4cf9-9584-b5bd72f36db5', 'accountantcrm@auao.com.au', '', '', '44300e75ad3d30400d6d93be7b59c35029b9eabf8bd27e1ca058eca22ba0bd72', '69ec6385-f347-49d1-8c95-bd0361369778', 'agent', 'enabled')`);
+        VALUES ('479877f2-65a3-44c4-92f5-f1eb4a1ae9f7', 'accountantcrm@auao.com.au', '', '', '44300e75ad3d30400d6d93be7b59c35029b9eabf8bd27e1ca058eca22ba0bd72', '69ec6385-f347-49d1-8c95-bd0361369778', 'agent', 'enabled')`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
