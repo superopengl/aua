@@ -90,7 +90,7 @@ const HomeCarouselAreaRaw = props => {
               <Col {...span}>
                 <SignInButton block type="primary" 
                   size="large"
-                  onClick={() => handleSignIn()}>Sign In with Email</SignInButton>
+                  onClick={() => handleSignIn()}>Sign On with Email</SignInButton>
               </Col>
               <Col {...span}>
                 <GoogleSsoButton
