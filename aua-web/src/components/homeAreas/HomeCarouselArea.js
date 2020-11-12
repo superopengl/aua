@@ -73,7 +73,7 @@ const HomeCarouselAreaRaw = props => {
       44;
 
   const handleSignIn = () => {
-    props.history.push('/signin')
+    props.history.push('/signon')
   }
 
   return (

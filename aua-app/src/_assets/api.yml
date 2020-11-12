@@ -135,7 +135,7 @@ paths:
       responses:
         200:
           description: OK
-  /auth/signin:
+  /auth/signon:
     post:
       operationId: signin
       # security:
