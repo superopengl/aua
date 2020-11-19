@@ -301,7 +301,7 @@ const UserListPage = () => {
         onCancel={() => setProfileModalVisible(false)}
         footer={null}
       >
-        <Alert style={{ marginBottom: '0.5rem' }} type="warning" message="Changing email will change the login account. After changing, system will send you an new invitation to the new email address to reset your password." />
+        <Alert style={{ marginBottom: '0.5rem' }} type="warning" message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." />
 
         {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} />}
       </Modal>
