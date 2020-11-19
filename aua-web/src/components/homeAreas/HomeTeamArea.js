@@ -40,7 +40,7 @@ class HomeTeamArea extends React.Component {
         xxl: 8
       },
       style: {
-        backgroundColor: '#f5f5f5',
+        backgroundImage: 'linear-gradient(180deg, #f5f5f5, #ffffff)',
         // color: '#f0f0f0',
       }
     }
