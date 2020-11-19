@@ -11,7 +11,7 @@ width: 100%;
 // margin-top: 2rem;
 padding: 1rem;
 // border: 1px solid #eeeeee;
-background-image: linear-gradient(135deg, #f5f5f5, #f5f5f5 40px, #ffffff 40px, #ffffff 100%);
+background-image: linear-gradient(135deg, #f5f5f5, #f5f5f5 30px, #ffffff 30px, #ffffff 100%);
 border-radius: 6px;
 
 h1 {
