@@ -87,7 +87,7 @@ export const listAgents = handlerWrapper(async (req, res) => {
 
   const list = await getRepository(User)
     .createQueryBuilder()
-    .where({ role: 'agent' })
+    .where(`role = 'agent' OR role = 'admin'`)
     .select([
       `id`,
       `email`,
