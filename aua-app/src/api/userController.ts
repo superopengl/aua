@@ -26,7 +26,7 @@ export const getProfile = handlerWrapper(async (req, res) => {
 
 
 export const changePassword = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'client');
+  assertRole(req, 'admin', 'agent', 'client');
   const { password, newPassword } = req.body;
   validatePasswordStrength(newPassword);
 
