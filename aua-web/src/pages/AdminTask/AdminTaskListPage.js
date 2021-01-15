@@ -128,7 +128,7 @@ const AdminTaskListPage = (props) => {
       title: 'User',
       dataIndex: 'email',
       sorter: () => 0,
-      render: (text) => <Text code><small><Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={text || ''} /></small></Text>
+      render: (text) => <Text><Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={text || ''} /></Text>
     },
     {
       title: 'Created At',

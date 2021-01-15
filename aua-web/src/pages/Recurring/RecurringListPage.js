@@ -5,7 +5,7 @@ import HomeHeader from 'components/HomeHeader';
 import * as moment from 'moment';
 import Text from 'antd/lib/typography/Text';
 import {
-  DeleteOutlined, EditOutlined, CaretRightFilled, PlusOutlined
+  DeleteOutlined, EditOutlined, CaretRightFilled, PlusOutlined, DashOutlined
 } from '@ant-design/icons';
 import { Link, withRouter } from 'react-router-dom';
 import { Space } from 'antd';
@@ -50,6 +50,12 @@ const StyledDrawer = styled(Drawer)`
   .rce-mbox-time {
     bottom: -1.5rem;
   }
+}
+`;
+
+const StylePatternTable = styled.table`
+td.label {
+  width: 100px;
 }
 `;
 
@@ -115,39 +121,40 @@ const RecurringListPage = (props) => {
     {
       title: 'Recurring Pattern',
       render: (text, record) => {
-        return <table>
+        const deprecated = isRecurringDeprecated(record);
+        return <StylePatternTable>
           <tbody>
           <tr>
               <td colSpan={2}>
                { cronstrue.toString(record.cron, { use24HourTimeFormat: false, verbose: true })}
               </td>
             </tr>
-            <tr>
-              <td>
+           {record.startDate && <tr>
+              <td className="label">
                 <small>Start From</small>
               </td>
               <td>
-                <TimeAgo value={record.startDate} showTime={false} direction="horizontal" />
+                <Text type="secondary"><small>{moment(record.startDate).format('DD MMM YYYY')}</small></Text>
               </td>
-            </tr>
+            </tr>}
             <tr>
-              <td>
+              <td className="label">
               <small>Next Run At</small>
               </td>
               <td>
-                <TimeAgo value={getNextRunDateString(record.cron)}  direction="horizontal" />
+                {deprecated ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={getNextRunDateString(record.cron)}  direction="horizontal" />}
               </td>
             </tr>
             <tr>
-              <td>
+              <td className="label">
               <small>Last Updated At</small>
               </td>
               <td>
-                <TimeAgo value={record.lastUpdatedAt}  direction="horizontal" />
+              {deprecated ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={record.lastUpdatedAt}  direction="horizontal" />}
               </td>
             </tr>
           </tbody>
-        </table>;
+        </StylePatternTable>;
       }
     },
     {

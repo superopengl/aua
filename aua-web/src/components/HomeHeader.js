@@ -75,6 +75,10 @@ const HomeHeaderRaw = props => {
         history.push('/');
       },
       maskClosable: true,
+      okButtonProps: {
+        danger: true,
+        ghost: true,
+      },
       okText: 'Yes, log me out!',
       onCancel() {
       },
