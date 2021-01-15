@@ -1,6 +1,6 @@
 import { getRepository, Not, Equal } from 'typeorm';
 import { Recurring } from '../entity/Recurring';
-import { CronTask } from 'cron';
+import { CronJob } from 'cron';
 import { SysLog } from '../entity/SysLog';
 import { generateTaskByTaskTemplateAndPortfolio } from '../utils/generateTaskByTaskTemplateAndPortfolio';
 import { assert } from '../utils/assert';
@@ -80,8 +80,64 @@ export async function executeRecurring(recurringId) {
   return task;
 }
 
-function startSingleRecurring(recurring: Recurring): CronTask {
-  const { id, cron, taskTemplateId, portfolioId } = recurring;
+function createCronJob(cron: string, startDate: Date, onRunFn: () => Promise<void>): CronJob {
+  let cronPattern = cron;
+  let onExecuteCallback = onRunFn;
+  if (/L/.test(cron)) {
+    cronPattern = cron.replace('L', '28-31');
+    onExecuteCallback = async () => {
+      const now = moment();
+      const today = now.format('D');
+      const lastDayOfMonth = now.endOf('month').format('D');
+      if (today === lastDayOfMonth) {
+        await onRunFn();
+      }
+    };
+  }
+
+  const onExecuteAfterStartDate = () => {
+    if (startDate) {
+      const startMoment = moment(startDate).startOf('day');
+      const now = moment();
+      if (now.isAfter(startMoment)) {
+        onExecuteCallback();
+      }
+    } else {
+      onExecuteCallback();
+    }
+  }
+
+  return new CronJob(
+    cronPattern,
+    onExecuteAfterStartDate,
+    null,
+    startImmidiatly,
+    tz
+  );
+}
+
+function startSingleRecurring(recurring: Recurring): CronJob {
+  const { id, cron, startDate, taskTemplateId, portfolioId } = recurring;
+
+  const cronJob = createCronJob(
+    cron,
+    startDate,
+    async () => {
+      const task = await executeRecurring(id);
+
+      const log = new SysLog();
+      log.level = 'info';
+      log.message = 'Recurring complete';
+      log.data = {
+        recurringId: id,
+        taskTemplateId,
+        portfolioId,
+        createdTaskId: task.id
+      };
+
+      logging(log);
+    }
+  );
 
   const log = new SysLog();
   log.level = 'info';
@@ -92,6 +148,8 @@ function startSingleRecurring(recurring: Recurring): CronTask {
   };
   console.log(`Cron started recuring ${id} '${cron}'`);
   logging(log);
+
+  return cronJob;
 }
 
 async function raceSingletonLock(): Promise<boolean> {
