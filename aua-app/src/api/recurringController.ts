@@ -11,10 +11,11 @@ import { TaskTemplate } from '../entity/TaskTemplate';
 import { Recurring } from '../entity/Recurring';
 import { executeRecurring, restartCronService } from '../services/cronService';
 import { CronLock } from '../entity/CronLock';
+import * as moment from 'moment';
 
 export const saveRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const { id, portfolioId, taskTemplateId, cron, dueDay } = req.body;
+  const { id, portfolioId, taskTemplateId, cron, dueDay, startDate } = req.body;
 
   const portfolio = await getRepository(Portfolio).findOne(portfolioId);
   assert(portfolio, 404, 'Porotofolio is not found');
@@ -28,6 +29,7 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
   recurring.taskTemplateId = taskTemplateId;
   recurring.cron = cron;
   recurring.dueDay = dueDay;
+  recurring.startDate = startDate ? moment(startDate).toDate() : null;
   recurring.lastUpdatedAt = getUtcNow();
 
   const repo = getRepository(Recurring);

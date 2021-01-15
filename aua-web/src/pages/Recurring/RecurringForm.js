@@ -9,6 +9,8 @@ import { listTaskTemplate } from 'services/taskTemplateService';
 import { listPortfolio } from 'services/portfolioService';
 import { getRecurring, saveRecurring } from 'services/recurringService';
 import styled from 'styled-components';
+import * as moment from 'moment';
+import { DateInput } from 'components/DateInput';
 
 const { Text } = Typography;
 
@@ -79,6 +81,15 @@ const RecurringForm = (props) => {
               </Space>
             </Select.Option>))}
           </StyledPortfolioSelect>
+        </Form.Item>
+        <Form.Item
+          label="Start Date" name="startDate" rules={[{ required: false, message: 'Invalid date or not a future date', validator: async (rule, value) => {
+            if (value && moment(value).endOf('date').isBefore()) {
+              throw new Error();
+            }
+          }}]}
+        >
+          <DateInput placeholder="DD/MM/YYYY" style={{ display: 'block' }} />
         </Form.Item>
         <Form.Item
           label="Creation Period" name="cron" rules={[{ required: true, message: ' ' }]}

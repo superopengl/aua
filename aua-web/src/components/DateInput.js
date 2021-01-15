@@ -21,5 +21,10 @@ export const DateInput = (props) => {
 
 DateInput.propTypes = {
   defaultValue: PropTypes.string,
-  value: PropTypes.string
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+};
+
+DateInput.propTypes = {
+  onChange: () => {}
 };

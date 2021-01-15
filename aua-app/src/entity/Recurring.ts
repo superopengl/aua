@@ -23,6 +23,9 @@ export class Recurring {
   @Column({nullable: true})
   dueDay: number;
 
+  @Column({nullable: true})
+  startDate?: Date;
+
   @Column()
   lastUpdatedAt: Date;
 }
