@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tooltip } from 'antd';
-import { MessageOutlined } from '@ant-design/icons';
+import { MessageFilled } from '@ant-design/icons';
 
 
 export const UnreadMessageIcon = props => {
@@ -10,7 +10,7 @@ export const UnreadMessageIcon = props => {
   }
   return <div style={style}>
     <Tooltip title="There are unread messages" >
-      <MessageOutlined style={{ color: 'rgba(0,0,0,0.3)', marginLeft: 4 }} />
+      <MessageFilled style={{ marginLeft: 4 }} />
     </Tooltip>
   </div>
 }

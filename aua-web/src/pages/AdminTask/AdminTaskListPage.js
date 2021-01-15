@@ -23,6 +23,24 @@ const ContainerStyled = styled.div`
     font-weight: bold;
     background-color: rgb(255,255,220);
   }
+
+  .ant-table {
+    font-size: 12px !important;
+
+    .ant-table-column-sorters {
+      padding: 2px !important;
+    }
+
+    .ant-table-cell {
+      // vertical-align: top;
+      padding: 2px !important;
+    }
+  }
+
+  .ant-select-selection-item {
+    font-size: 12px !important;
+  }
+
 `;
 
 const StyledTitleRow = styled.div`
@@ -43,7 +61,7 @@ const DEFAULT_QUERY_INFO = {
   page: 1,
   size: 50,
   total: 0,
-  status: ['todo', 'signed'],
+  status: ['todo', 'signed', 'to_sign', 'complete'],
   orderField: 'lastUpdatedAt',
   orderDirection: 'DESC'
 };
@@ -63,17 +81,26 @@ const AdminTaskListPage = (props) => {
       // filteredValue: filteredInfo.name || null,
       sorter: () => 0,
       // onFilter: (value, record) => record.name.includes(value),
-      render: (text, record) => <Link to={`/tasks/${record.id}/proceed?${record.lastUnreadMessageAt ? 'chat=1' : ''}`}>
-        <Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={text || ''} />
-        {record.lastUnreadMessageAt && <UnreadMessageIcon style={{marginLeft: 4}}/>}
-      </Link>,
+      render: (text, record) => {
+        const { id, name, forWhom, lastUnreadMessageAt } = record;
+        return <div>
+          <Link to={`/tasks/${id}/proceed?${lastUnreadMessageAt ? 'chat=1' : ''}`}>
+            <Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={name || ''} />
+            {lastUnreadMessageAt && <UnreadMessageIcon style={{ marginLeft: 4 }} />}
+          </Link>
+          <Space size="small" style={{ alignItems: 'center', width: '100%' }}>
+            <PortfolioAvatar value={forWhom} id={record.portfolioId} size={30} />
+            <Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={forWhom || ''} />
+          </Space>
+        </div>
+      },
       ellipsis: false,
     },
     {
       title: 'Status',
       dataIndex: 'status',
       sorter: () => 0,
-      render: (text, record) => <TaskStatus width={60} status={record.status} name={record.forWhom} portfolioId={record.portfolioId} avatar={false}></TaskStatus>,
+      render: (text, record) => <TaskStatus width={40} status={record.status} name={record.forWhom} portfolioId={record.portfolioId} avatar={false}></TaskStatus>,
       ellipsis: false
     },
     {
@@ -83,20 +110,20 @@ const AdminTaskListPage = (props) => {
       render: (text) => <Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={text || ''} />,
       ellipsis: false
     },
-    {
-      title: 'Portfolio',
-      dataIndex: 'forWhom',
-      sorter: () => 0,
-      render: (text, record) => <Space direction="vertical" style={{alignItems: 'center', width: '100%'}}>
-      <PortfolioAvatar value={text} id={record.portfolioId} size={40}/>
-      <Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={text || ''} />
-      </Space>
-    },
+    // {
+    //   title: 'Portfolio',
+    //   dataIndex: 'forWhom',
+    //   sorter: () => 0,
+    //   render: (text, record) => <Space direction="vertical" style={{alignItems: 'center', width: '100%'}}>
+    //   <PortfolioAvatar value={text} id={record.portfolioId} size={40}/>
+    //   <Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={text || ''} />
+    //   </Space>
+    // },
     {
       title: 'User',
       dataIndex: 'email',
       sorter: () => 0,
-      render: (text) => <Text code><small>{text}</small></Text>
+      render: (text) => <Text code><small><Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={text || ''} /></small></Text>
     },
     {
       title: 'Created At',
@@ -113,6 +140,7 @@ const AdminTaskListPage = (props) => {
       // onFilter: (value, record) => record.agentId === value,
       sorter: () => 0,
       render: (text, record) => <Select
+        size="small"
         placeholder="Select an agent"
         style={{ width: 130 }}
         onChange={value => assignTaskToAgent(record, value)}
@@ -277,7 +305,7 @@ const AdminTaskListPage = (props) => {
           <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>Task Management</Title>
           </StyledTitleRow>
-          <Space style={{ width: '100%', justifyContent: 'flex-end', margin: '1rem auto 0.5rem' }}>
+          <Space style={{ width: '100%', justifyContent: 'space-between', margin: '1rem auto 0.5rem' }}>
             <Input.Search
               placeholder="input search text"
               enterButton={<><SearchOutlined /> Search</>}
@@ -289,21 +317,23 @@ const AdminTaskListPage = (props) => {
               allowClear
             />
 
-            <Select
-              mode="multiple"
-              allowClear
-              style={{ width: '520px' }}
-              placeholder="Status filter"
-              value={queryInfo?.status || []}
-              onChange={handleStatusFilter}
-            >
-              {StatusSelectOptions.map((x, i) => <Select.Option key={i} value={x.value}>
+            <Space size="small">
+              <Select
+                mode="multiple"
+                allowClear={false}
+                style={{ width: 420 }}
+                placeholder="Status filter"
+                value={queryInfo?.status || []}
+                onChange={handleStatusFilter}
+              >
+                {StatusSelectOptions.map((x, i) => <Select.Option key={i} value={x.value}>
                   {x.label}
-              </Select.Option>)}
-            </Select>
-            <Button onClick={() => clearAllFilters()}>Reset Filters</Button>
-            <Button onClick={() => loadList()} icon={<SyncOutlined />}></Button>
-            <Button onClick={() => handleCreateTask()} type="primary" icon={<PlusOutlined />}>New Task</Button>
+                </Select.Option>)}
+              </Select>
+              <Button onClick={() => clearAllFilters()}>Reset Filters</Button>
+              <Button onClick={() => loadList()} icon={<SyncOutlined />}></Button>
+              <Button onClick={() => handleCreateTask()} type="primary" icon={<PlusOutlined />}>New Task</Button>
+            </Space>
           </Space>
           <Table columns={columnDef}
             dataSource={taskList}
