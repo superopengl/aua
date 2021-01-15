@@ -53,6 +53,7 @@ export const listRecurring = handlerWrapper(async (req, res) => {
     .select([
       'x.id as id',
       'x."nameTemplate" as "nameTemplate"',
+      'x."startDate" as "startDate"',
       'x."dueDay" as "dueDay"',
       'u.email as email',
       'j.name as "taskTemplateName"',

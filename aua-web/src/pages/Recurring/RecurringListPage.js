@@ -121,6 +121,13 @@ const RecurringListPage = (props) => {
       }
     },
     {
+      title: 'Start From',
+      dataIndex: 'startDate',
+      render: (text) => {
+        return <TimeAgo value={text} />;
+      }
+    },
+    {
       title: 'Last Update At',
       dataIndex: 'lastUpdatedAt',
       render: (text) => {

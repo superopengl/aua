@@ -36,7 +36,7 @@ export const PortfolioAvatar = props => {
 
 PortfolioAvatar.propTypes = {
   value: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
   size: PropTypes.number,
 };
 
