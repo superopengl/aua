@@ -241,7 +241,7 @@ const ProceedTaskPage = (props) => {
         <Layout style={{ backgroundColor: '#ffffff', height: '100%' }}>
           <Layout.Content style={{ padding: '0' }}>
             <Row gutter={20}>
-              <Col style={{ width: '50%', maxWidth: 400 }}>
+              <Col flex="auto">
                 <Title level={3}>Fields</Title>
                 <Form
                   form={form}
@@ -278,7 +278,7 @@ const ProceedTaskPage = (props) => {
                   })}
                 </Form>
               </Col>
-              <Col style={{ flex: '1' }}>
+              <Col flex="auto">
                 <Title level={3}>Attachments</Title>
                 <TaskDocEditor value={task.docs} fields={task.fields} onChange={handleTaskDocsChange} />
                 <Title level={3} style={{ marginTop: '2rem' }}>Comments</Title>
