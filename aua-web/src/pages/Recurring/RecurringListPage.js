@@ -99,7 +99,7 @@ const RecurringListPage = (props) => {
       render: (text, record) => record.portfolioName ? <>
         <Space>
           <PortfolioAvatar value={text} user={record.portfolioId} size={40} />
-          <div direction="vertical" style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
+          <div direction="vertical" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
             {text}
             <Text type="secondary"><small>{record.email || <Text type="danger">deleted user</Text>}</small></Text>
           </div>
@@ -113,31 +113,41 @@ const RecurringListPage = (props) => {
       ellipsis: false
     },
     {
-      title: 'Recurring',
-      dataIndex: 'cron',
-      render: (text) => {
-        return cronstrue.toString(text, { use24HourTimeFormat: false, verbose: true });
-        // return <TimeAgo value={text} />;
-      }
-    },
-    {
-      title: 'Start From',
-      dataIndex: 'startDate',
-      render: (text) => {
-        return <TimeAgo value={text} />;
-      }
-    },
-    {
-      title: 'Last Update At',
-      dataIndex: 'lastUpdatedAt',
-      render: (text) => {
-        return <TimeAgo value={text} />;
-      }
-    },
-    {
-      title: 'Next Run At',
+      title: 'Recurring Pattern',
       render: (text, record) => {
-        return <TimeAgo value={getNextRunDateString(record.cron)} />;
+        return <table>
+          <tbody>
+          <tr>
+              <td colSpan={2}>
+               { cronstrue.toString(record.cron, { use24HourTimeFormat: false, verbose: true })}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <small>Start From</small>
+              </td>
+              <td>
+                <TimeAgo value={record.startDate} showTime={false} direction="horizontal" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+              <small>Next Run At</small>
+              </td>
+              <td>
+                <TimeAgo value={getNextRunDateString(record.cron)}  direction="horizontal" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+              <small>Last Updated At</small>
+              </td>
+              <td>
+                <TimeAgo value={record.lastUpdatedAt}  direction="horizontal" />
+              </td>
+            </tr>
+          </tbody>
+        </table>;
       }
     },
     {
@@ -229,10 +239,10 @@ const RecurringListPage = (props) => {
           </StyledTitleRow>
 
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-            {healthCheckResult && <Alert 
-            message={healthCheckResult.error || `Recurring service is healthy. Started at ${moment(healthCheckResult.lock.lockedAt).format('DD MMM YYYY hh:mm A')}`} 
-            type={healthCheckResult.error ? 'error' : 'success'} 
-            showIcon />}
+            {healthCheckResult && <Alert
+              message={healthCheckResult.error || `Recurring service is healthy. Started at ${moment(healthCheckResult.lock.lockedAt).format('DD MMM YYYY hh:mm A')}`}
+              type={healthCheckResult.error ? 'error' : 'success'}
+              showIcon />}
             <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Recurring</Button>
           </Space>
 
