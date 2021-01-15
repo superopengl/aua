@@ -13,6 +13,8 @@ import { listAgents } from 'services/userService';
 import styled from 'styled-components';
 import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
+import { GlobalContext } from 'contexts/GlobalContext';
+import * as ReactDom from 'react-dom';
 
 const { Title } = Typography;
 
@@ -62,6 +64,7 @@ const DEFAULT_QUERY_INFO = {
   size: 50,
   total: 0,
   status: ['todo', 'signed', 'to_sign', 'complete'],
+  assignee: null,
   orderField: 'lastUpdatedAt',
   orderDirection: 'DESC'
 };
@@ -73,6 +76,8 @@ const AdminTaskListPage = (props) => {
   const [agentList, setAgentList] = React.useState([]);
 
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject('query', DEFAULT_QUERY_INFO, true))
+  const context = React.useContext(GlobalContext);
+  const myUserId = context.user.id;
 
   const columnDef = [
     {
@@ -131,25 +136,6 @@ const AdminTaskListPage = (props) => {
       sorter: () => 0,
       render: (text) => <TimeAgo value={text} />
     },
-
-    {
-      title: 'Assignee',
-      dataIndex: 'agentId',
-      // filteredValue: filteredInfo.agentId || null,
-      // filters: agentList.map(a => ({ text: `${a.givenName} ${a.surname}`, value: a.id })),
-      // onFilter: (value, record) => record.agentId === value,
-      sorter: () => 0,
-      render: (text, record) => <Select
-        size="small"
-        placeholder="Select an agent"
-        style={{ width: 130 }}
-        onChange={value => assignTaskToAgent(record, value)}
-        value={text}
-      >
-        <Select.Option key={-1} value={null}>{' '}</Select.Option>
-        {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{a.givenName || 'Unset'} {a.surname || 'Unset'}</Select.Option>)}
-      </Select>
-    },
     {
       title: 'Last Update At',
       dataIndex: 'lastUpdatedAt',
@@ -174,6 +160,25 @@ const AdminTaskListPage = (props) => {
     //     return <Space size="small"><TimeAgo value={text} extra={<Button shape="circle" icon={<SearchOutlined />} onClick={() => handleShowSignDetail(record.id)} />} /></Space>;
     //   }
     // },
+
+    {
+      title: 'Assignee',
+      dataIndex: 'agentId',
+      // filteredValue: filteredInfo.agentId || null,
+      // filters: agentList.map(a => ({ text: `${a.givenName} ${a.surname}`, value: a.id })),
+      // onFilter: (value, record) => record.agentId === value,
+      sorter: () => 0,
+      render: (text, record) => <Select
+        size="small"
+        placeholder="Select an agent"
+        style={{ width: 130 }}
+        onChange={value => assignTaskToAgent(record, value)}
+        value={text}
+      >
+        <Select.Option key={-1} value={null}>{' '}</Select.Option>
+        {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{myUserId === a.id ? 'Me' : `${a.givenName || 'Unset'} ${a.surname || 'Unset'}`}</Select.Option>)}
+      </Select>
+    },
     {
       title: 'Action',
       // fixed: 'right',
@@ -223,17 +228,25 @@ const AdminTaskListPage = (props) => {
     setLoading(true);
     const { data, pagination: { total } } = await searchTask(queryInfo);
 
-    setTaskList(data);
-    updateQueryInfo({ ...queryInfo, total })
-    setLoading(false);
+    ReactDom.unstable_batchedUpdates(() => {
+      setTaskList(data);
+      updateQueryInfo({ ...queryInfo, total })
+      setLoading(false);
+    });
   }
 
   const loadList = async () => {
-    setLoading(true);
-    await loadTaskWithQuery(queryInfo);
-    const agentList = await listAgents();
-    setAgentList(agentList);
-    setLoading(false);
+    try {
+      setLoading(true);
+      await loadTaskWithQuery(queryInfo);
+      const agentList = await listAgents();
+      ReactDom.unstable_batchedUpdates(() => {
+        setAgentList(agentList);
+        setLoading(false);
+      });
+    } catch {
+      setLoading(false);
+    }
   }
 
   const handleDelete = async (e, item) => {
@@ -244,7 +257,7 @@ const AdminTaskListPage = (props) => {
       okText: 'Yes, Archive it',
       onOk: async () => {
         await deleteTask(id);
-        await loadList();
+        loadList();
       },
       maskClosable: true,
       okButtonProps: {
@@ -258,6 +271,7 @@ const AdminTaskListPage = (props) => {
 
     const newQueryInfo = {
       ...queryInfo,
+      page: 1,
       text
     }
 
@@ -267,6 +281,7 @@ const AdminTaskListPage = (props) => {
   const handleStatusFilter = async (status) => {
     const newQueryInfo = {
       ...queryInfo,
+      page: 1,
       status
     }
     await loadTaskWithQuery(newQueryInfo);
@@ -279,6 +294,15 @@ const AdminTaskListPage = (props) => {
     }
     updateQueryInfo(newQueryInfo);
     // await loadTaskWithQuery(newQueryInfo);
+  }
+
+  const handleAssigneeChange = (assignee) => {
+    const newQueryInfo = {
+      ...queryInfo,
+      page: 1,
+      assignee
+    }
+    loadTaskWithQuery(newQueryInfo);
   }
 
   const handleCreateTask = () => {
@@ -307,7 +331,7 @@ const AdminTaskListPage = (props) => {
           </StyledTitleRow>
           <Space style={{ width: '100%', justifyContent: 'space-between', margin: '1rem auto 0.5rem' }}>
             <Input.Search
-              placeholder="input search text"
+              placeholder="Search text"
               enterButton={<><SearchOutlined /> Search</>}
               onSearch={value => handleSearch(value)}
               onPressEnter={e => handleSearch(e.target.value)}
@@ -329,6 +353,15 @@ const AdminTaskListPage = (props) => {
                 {StatusSelectOptions.map((x, i) => <Select.Option key={i} value={x.value}>
                   {x.label}
                 </Select.Option>)}
+              </Select>
+              <Select
+                placeholder="Filter agent"
+                style={{ width: 130 }}
+                onChange={handleAssigneeChange}
+                value={queryInfo?.assignee}
+              >
+                <Select.Option key={-1} value={null}>{' '}</Select.Option>
+                {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{myUserId === a.id ? 'Me' : `${a.givenName || 'Unset'} ${a.surname || 'Unset'}`}</Select.Option>)}
               </Select>
               <Button onClick={() => clearAllFilters()}>Reset Filters</Button>
               <Button onClick={() => loadList()} icon={<SyncOutlined />}></Button>
