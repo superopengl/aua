@@ -225,7 +225,7 @@ export const handleInviteUser = async user => {
   });
 
   await getRepository(User).save(user);
-}
+};
 
 export const inviteUser = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');

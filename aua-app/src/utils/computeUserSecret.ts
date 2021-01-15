@@ -1,4 +1,3 @@
-import { assert } from './assert';
 import * as crypto from 'crypto';
 
 export function computeUserSecret(password, salt) {
