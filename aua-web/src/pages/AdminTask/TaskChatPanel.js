@@ -28,6 +28,7 @@ min-width: 200px;
 
 .rce-mbox {
   padding-bottom: 2rem;
+  box-shadow: none;
 
   .rce-mbox-text {
     white-space: pre-line;

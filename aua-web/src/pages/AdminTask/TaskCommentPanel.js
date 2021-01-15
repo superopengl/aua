@@ -11,13 +11,17 @@ import { ChatService } from 'services/ChatService';
 import styled from 'styled-components';
 import { listTaskComments, addTaskComment } from '../../services/taskService';
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 const Container = styled.div`
 min-width: 200px;
 
 .ant-list-split .ant-list-item {
   border: none;
+}
+
+.ant-list-item {
+  padding: 0;
 }
 `;
 
@@ -88,6 +92,7 @@ const TaskCommentPanel = (props) => {
 
   return <Container>
     <List
+      size="small"
       itemLayout="horizontal"
       dataSource={list}
       bordered={false}
@@ -95,8 +100,8 @@ const TaskCommentPanel = (props) => {
         <List.Item>
           <List.Item.Meta
             // avatar={<PortfolioAvatar id={item.senderId} value={getAvatarValue(item)} size={30} />}
-            title={<Space><Text type="secondary" strong>{getAvatarValue(item)}</Text><TimeAgo value={item.createdAt} accurate={false} /></Space>}
-            description={item.content}
+            title={<Space><Text strong>{getAvatarValue(item)}</Text><TimeAgo value={item.createdAt} accurate={false} /></Space>}
+            description={<Paragraph >{item.content}</Paragraph>}
           />
         </List.Item>
       )}
