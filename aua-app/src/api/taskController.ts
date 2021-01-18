@@ -31,7 +31,7 @@ export const generateTask = handlerWrapper(async (req, res) => {
   const Task = await generateTaskByTaskTemplateAndPortfolio(
     taskTemplateId,
     portfolioId,
-    (j, p) => ` ${p.name} ${j.name}`
+    (j, p) => `${p.name} ${j.name}`
   );
 
   res.json(Task);
@@ -168,7 +168,7 @@ export const searchTask = handlerWrapper(async (req, res) => {
       // `x."signedAt" as "signedAt"`,
     ]);
   if (text) {
-    query = query.andWhere('x.name ILIKE :text OR x."forWhom" ILIKE :text OR j.name ILIKE :text OR u.email ILIKE :text', { text: `%${text}%` });
+    query = query.andWhere('(x.name ILIKE :text OR x."forWhom" ILIKE :text OR j.name ILIKE :text OR u.email ILIKE :text)', { text: `%${text}%` });
   }
   const total = await query.getCount();
   const list = await query
