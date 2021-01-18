@@ -122,35 +122,36 @@ const RecurringListPage = (props) => {
       title: 'Recurring Pattern',
       render: (text, record) => {
         const deprecated = isRecurringDeprecated(record);
+        const { cron, startFrom, lastUpdatedAt } = record;
         return <StylePatternTable>
           <tbody>
-          <tr>
+            <tr>
               <td colSpan={2}>
-               { cronstrue.toString(record.cron, { use24HourTimeFormat: false, verbose: true })}
+                {cronstrue.toString(cron, { use24HourTimeFormat: false, verbose: true })}
               </td>
             </tr>
-           {record.startFrom && <tr>
+            {startFrom && <tr>
               <td className="label">
                 <small>Start From</small>
               </td>
               <td>
-                <Text type="secondary"><small>{moment(record.startFrom).format('DD MMM YYYY')}</small></Text>
+                <Text type="secondary"><small>{moment(startFrom).format('DD MMM YYYY')}</small></Text>
               </td>
             </tr>}
             <tr>
               <td className="label">
-              <small>Next Run At</small>
+                <small>Next Run At</small>
               </td>
               <td>
-                {deprecated ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={getNextRunDateString(record.cron)}  direction="horizontal" />}
+                {deprecated ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={getNextRunDateString(cron, startFrom)} direction="horizontal" />}
               </td>
             </tr>
             <tr>
               <td className="label">
-              <small>Last Updated At</small>
+                <small>Last Updated At</small>
               </td>
               <td>
-              {deprecated ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={record.lastUpdatedAt}  direction="horizontal" />}
+                {deprecated ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={lastUpdatedAt} direction="horizontal" />}
               </td>
             </tr>
           </tbody>
