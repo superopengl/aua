@@ -129,12 +129,12 @@ const RecurringListPage = (props) => {
                { cronstrue.toString(record.cron, { use24HourTimeFormat: false, verbose: true })}
               </td>
             </tr>
-           {record.startDate && <tr>
+           {record.startFrom && <tr>
               <td className="label">
                 <small>Start From</small>
               </td>
               <td>
-                <Text type="secondary"><small>{moment(record.startDate).format('DD MMM YYYY')}</small></Text>
+                <Text type="secondary"><small>{moment(record.startFrom).format('DD MMM YYYY')}</small></Text>
               </td>
             </tr>}
             <tr>

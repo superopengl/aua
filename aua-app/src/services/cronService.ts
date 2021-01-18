@@ -7,7 +7,6 @@ import { assert } from '../utils/assert';
 import { TaskStatus } from '../types/TaskStatus';
 import { Task } from '../entity/Task';
 import errorToJSON from 'error-to-json';
-import * as moment from 'moment';
 import { getUtcNow } from '../utils/getUtcNow';
 import { CronLock } from '../entity/CronLock';
 import { TaskTemplate } from '../entity/TaskTemplate';
@@ -15,8 +14,9 @@ import { Portfolio } from '../entity/Portfolio';
 import { User } from '../entity/User';
 import * as os from 'os';
 import { sendNewTaskCreatedEmail } from '../utils/sendNewTaskCreatedEmail';
+import * as moment from 'moment-timezone';
+import 'colors';
 
-const startImmidiatly = true;
 const tz = 'Australia/Sydney';
 const runningTasks = [];
 
@@ -28,7 +28,7 @@ function stopRunningTasks() {
 }
 
 async function startRecurrings() {
-  console.log('Restarting cron service');
+  console.log('[Recurring]'.bgYellow, 'Starting cron service');
 
   const list = await getRepository(Recurring)
     .createQueryBuilder('x')
@@ -43,7 +43,7 @@ async function startRecurrings() {
   stopRunningTasks();
   const tasks = list.map(r => startSingleRecurring(r));
   runningTasks.push(...tasks);
-  console.log('Restarted cron service');
+  console.log('[Recurring]'.bgYellow, 'Started cron service');
 }
 
 function logging(log: SysLog) {
@@ -63,11 +63,14 @@ export async function executeRecurring(recurringId) {
   assert(recurring, 404);
   const { taskTemplateId, portfolioId, nameTemplate } = recurring;
 
+  const taskName = nameTemplate.replace('{{createdDate}}', moment().format('DD MMM YYYY'));
   const task = await generateTaskByTaskTemplateAndPortfolio(
     taskTemplateId,
     portfolioId,
-    () => nameTemplate.replace('{{createdDate}}', moment().format('DD MMM YYYY'))
+    () => taskName
   );
+
+  console.log('[Recurring]'.bgYellow, 'task created', `${taskName}`.yellow);
 
   task.status = TaskStatus.TODO;
 
@@ -80,7 +83,7 @@ export async function executeRecurring(recurringId) {
   return task;
 }
 
-function createCronJob(cron: string, startDate: Date, onRunFn: () => Promise<void>): CronJob {
+function createCronJob(cron: string, startFrom: Date, onRunFn: () => Promise<void>): CronJob {
   let cronPattern = cron;
   let onExecuteCallback = onRunFn;
   if (/L/.test(cron)) {
@@ -96,10 +99,13 @@ function createCronJob(cron: string, startDate: Date, onRunFn: () => Promise<voi
   }
 
   const onExecuteAfterStartDate = () => {
-    if (startDate) {
-      const startMoment = moment(startDate).startOf('day');
+    console.log('[Recurring]'.bgYellow, 'attempting');
+    if (startFrom) {
+      // startFrom is of Australia/Sydney timezone. 
+      // Have to change to UTC
+      const startUtcMoment = moment.tz(startFrom, tz).startOf('day');
       const now = moment();
-      if (now.isAfter(startMoment)) {
+      if (now.isAfter(startUtcMoment)) {
         onExecuteCallback();
       }
     } else {
@@ -107,27 +113,30 @@ function createCronJob(cron: string, startDate: Date, onRunFn: () => Promise<voi
     }
   }
 
-  return new CronJob(
+  const job = new CronJob(
     cronPattern,
     onExecuteAfterStartDate,
     null,
-    startImmidiatly,
+    false,
     tz
   );
+  job.start();
+
+  return job;
 }
 
 function startSingleRecurring(recurring: Recurring): CronJob {
-  const { id, cron, startDate, taskTemplateId, portfolioId } = recurring;
+  const { id, cron, startFrom: startFrom, taskTemplateId, portfolioId } = recurring;
 
   const cronJob = createCronJob(
     cron,
-    startDate,
+    startFrom,
     async () => {
       const task = await executeRecurring(id);
 
       const log = new SysLog();
       log.level = 'info';
-      log.message = 'Recurring complete';
+      log.message = 'Recurring triggered';
       log.data = {
         recurringId: id,
         taskTemplateId,
@@ -146,9 +155,9 @@ function startSingleRecurring(recurring: Recurring): CronJob {
     recurringId: id,
     cron
   };
-  console.log(`Cron started recuring ${id} '${cron}'`);
   logging(log);
-
+  
+  console.log('[Recurring]'.bgYellow, `Cron started recuring ${id} '${cron}'`);
   return cronJob;
 }
 

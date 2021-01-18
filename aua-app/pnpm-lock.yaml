@@ -4,6 +4,7 @@ dependencies:
   '@types/node': 14.0.27
   aws-sdk: 2.730.0
   body-parser: 1.19.0
+  colors: 1.4.0
   compression: 1.7.4
   cookie-parser: 1.4.5
   cors: 2.8.5
@@ -22,6 +23,7 @@ dependencies:
   md-to-pdf: 3.1.1
   md5: 2.3.0
   moment: 2.27.0
+  moment-timezone: 0.5.32
   nodemailer: 6.4.14
   pg: 8.3.3_pg@8.3.3
   pug: 3.0.0
@@ -992,6 +994,12 @@ packages:
   /color-name/1.1.4:
     resolution:
       integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
+  /colors/1.4.0:
+    dev: false
+    engines:
+      node: '>=0.1.90'
+    resolution:
+      integrity: sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
   /commander/2.20.3:
     dev: true
     resolution:
@@ -3071,10 +3079,20 @@ packages:
     dev: false
     resolution:
       integrity: sha512-+GgHNg8xRhMXfEbv81iDtrVeTcWt0kWmTEY1XQK14dICTXnWJnT0dxdlPspwqF3keKMVPXwayEsk1DI0AA/jdA==
+  /moment-timezone/0.5.32:
+    dependencies:
+      moment: 2.29.1
+    dev: false
+    resolution:
+      integrity: sha512-Z8QNyuQHQAmWucp8Knmgei8YNo28aLjJq6Ma+jy1ZSpSk5nyfRT8xgUbSQvD2+2UajISfenndwvFuH3NGS+nvA==
   /moment/2.27.0:
     dev: false
     resolution:
       integrity: sha512-al0MUK7cpIcglMv3YF13qSgdAIqxHTO7brRtaz3DlSULbqfazqkc5kEjNrLDOM7fsjshoFIihnU8snrP7zUvhQ==
+  /moment/2.29.1:
+    dev: false
+    resolution:
+      integrity: sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
   /ms/2.0.0:
     resolution:
       integrity: sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=
@@ -5195,6 +5213,7 @@ specifiers:
   '@types/node': ^14.0.5
   aws-sdk: ^2.686.0
   body-parser: ^1.19.0
+  colors: ^1.4.0
   compression: ^1.7.4
   cookie-parser: ^1.4.5
   cors: ^2.8.5
@@ -5213,6 +5232,7 @@ specifiers:
   md-to-pdf: ^3.1.1
   md5: ^2.3.0
   moment: ^2.27.0
+  moment-timezone: ^0.5.32
   nodemailer: ^6.4.14
   nodemon: ^2.0.4
   pg: ^8.3.3

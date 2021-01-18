@@ -83,7 +83,7 @@ const RecurringForm = (props) => {
           </StyledPortfolioSelect>
         </Form.Item>
         <Form.Item
-          label="Start Date" name="startDate" rules={[{ required: false, message: 'Invalid date or not a future date', validator: async (rule, value) => {
+          label="Start Date" name="startFrom" rules={[{ required: false, message: 'Invalid date or not a future date', validator: async (rule, value) => {
             if (value && moment(value).endOf('date').isBefore()) {
               throw new Error();
             }
