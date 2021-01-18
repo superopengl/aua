@@ -44,11 +44,11 @@ class HomeServiceArea extends React.Component {
     }
 
     return (
-      <HomeRowArea {...props}>
+      <HomeRowArea {...props} title="Services">
 
         <Space direction="vertical" style={{ height: '100%', justifyContent: 'space-between' }}>
           <InfoCard >
-            <Title>Tax</Title>
+            <Title level={3}>Tax</Title>
             <section>
               <p>Our role as professional tax accountant is to help you navigate your way through the complex world of tax, and provide strategic solutions to legally minimise tax and develop an effective tax strategy.</p>
               <p>We updates you for list of tax issues and reporting, as well as the laws and ATO rulings how to go with it. You have to pay it, but let’s make sure you don’t pay more than you have to.</p>
@@ -63,7 +63,7 @@ class HomeServiceArea extends React.Component {
             </section>
           </InfoCard>
           <InfoCard >
-            <Title>IT Support</Title>
+            <Title level={3}>IT Support</Title>
             <section>
               <p>
               Now most of works have been done over internet and Information technology is playing a very important role during your daily business operating. Do you feel you have been distressed by more paperwork and complicated processing? And lots of work have been doubled, even tripled. We are helping you to simplify your daily operating process, design your finance policies. This will reduce your finance risk and achieve business success.
@@ -77,7 +77,7 @@ class HomeServiceArea extends React.Component {
 
         <Space direction="vertical" style={{ height: '100%', justifyContent: 'space-between' }}>
           <InfoCard >
-            <Title>Accounting</Title>
+            <Title level={3}>Accounting</Title>
             <section>
               <p>
               Business is more than just the numbers. Having a solid understanding of your business, financial position, and the market enables you to make business decisions that ultimately improve efficiency and drive profitability. Our accounting team double as your financial business advisors; giving you advice that makes sense and helping you manage risk, and identify and take advantage of profit opportunities. Often you can gain more from your accounts than you realise. Understanding your financial position can help you identify new investors and partners, set a future succession plan, execute an acquisition strategy or secure that all important bank loan. You can identify areas of strength and weakness, and use the reliable financial data to manage investments and reduce over spending.
@@ -108,14 +108,11 @@ class HomeServiceArea extends React.Component {
 
             </section>
           </InfoCard>
-
-
-
         </Space>
 
         <Space direction="vertical" style={{ height: '100%', justifyContent: 'space-between' }}>
           <InfoCard >
-            <Title>Corporate Advisory</Title>
+            <Title level={3}>Corporate Advisory</Title>
             <section>
               <p>
               Providing superior strategic advice, our corporate advisory team is able to help steer you through the options for mergers, acquisitions, restructuring, takeover defence and divestitures.
@@ -129,11 +126,8 @@ class HomeServiceArea extends React.Component {
             </section>
           </InfoCard>
 
-
-
-
           <InfoCard >
-            <Title>Business Setting Up and Maintenance</Title>
+            <Title level={3}>Business Setting Up and Maintenance</Title>
             <section>
               <p>
               We provide service relating to company, trust, partnership and sole trader setting up, suggesting business owner to choose the most suitable structure.
@@ -148,7 +142,7 @@ class HomeServiceArea extends React.Component {
           </InfoCard>
 
           <InfoCard >
-            <Title>188/132投资移民审计</Title>
+            <Title level={3}>188/132投资移民审计</Title>
             <section>
               <p>
               我们承办中国企业主申请澳洲投资移民188/132类签证，针对中国企业进行财务审计，出具符合2400/4400标准的财务报表。具体业务细节欢迎咨询。

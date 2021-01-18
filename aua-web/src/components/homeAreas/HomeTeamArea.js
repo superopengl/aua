@@ -46,7 +46,7 @@ class HomeTeamArea extends React.Component {
     }
 
     return (
-      <HomeRowArea {...props}>
+      <HomeRowArea {...props} title="Team">
         <InfoCard >
           <StyledAvatar src="/images/avatar-zhou.jpg" />
           <section>
