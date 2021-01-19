@@ -11,7 +11,7 @@ import styled from 'styled-components';
 import * as moment from 'moment';
 import { DateInput } from 'components/DateInput';
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 const StyledPortfolioSelect = styled(Select)`
   .ant-select-selector {
@@ -61,6 +61,7 @@ const RecurringForm = (props) => {
   return <>
     {!loading && <Form layout="vertical" onFinish={handleSaveRecurring} form={form} initialValues={initialValues}>
       <Space direction="vertical" size="small">
+        <Paragraph type="secondary">The recurring will happen at 5:00 am (Sydney time) on the specified day.</Paragraph>
         <Form.Item label="Task Template" name="taskTemplateId" rules={[{ required: true, message: ' ' }]}>
           <Select allowClear>
             {taskTemplateList.map((t, i) => (<Select.Option key={i} value={t.id}>
@@ -82,9 +83,11 @@ const RecurringForm = (props) => {
           </StyledPortfolioSelect>
         </Form.Item>
         <Form.Item
-          label="Start On" name="startFrom" rules={[{
-            required: false, message: 'Invalid date or not a future date', validator: async (rule, value) => {
-              if (value && moment(value).endOf('date').isBefore()) {
+          label="Start On (First Run)" name="startFrom" 
+          extra="The recurring will happen at 5:00 am (Sydney time) on the specified day."
+          rules={[{
+            required: false, message: 'Not a valid future date', validator: async (rule, value) => {
+              if (value && !moment(value).isAfter()) {
                 throw new Error();
               }
             }
@@ -105,16 +108,17 @@ const RecurringForm = (props) => {
         >
           {/* <Input autoSize={{ minRows: 3, maxRows: 20 }} maxLength={20} placeholder="Type here ..." allowClear disabled={loading} /> */}
           <Select>
+            <Select.Option value="year">Yearly</Select.Option>
             <Select.Option value="month">Monthly</Select.Option>
             <Select.Option value="week">Weekly</Select.Option>
-            <Select.Option value="year">Yearly</Select.Option>
+            <Select.Option value="day">Daily</Select.Option>
           </Select>
         </Form.Item>
 
 
         <Form.Item
           label="Due Day (+N days after the recurring executes)" name="dueDay" rules={[{ required: false, message: ' ', type: 'number', min: 1, max: 366 }]}
-          help="When the recurring executes, this value will be used to automatically populate the 'Due Date' field (if defined) on the task template."
+          extra="When the recurring executes, this value will be used to automatically populate the 'Due Date' field (if defined) on the task template."
         >
           {/* <Input autoSize={{ minRows: 3, maxRows: 20 }} maxLength={20} placeholder="Type here ..." allowClear disabled={loading} /> */}
           {/* <Text type="secondary"><small>This will automatically fill the 'Due Date' field if it's defined on the task template when the recurring creates one.</small></Text> */}

@@ -20,7 +20,7 @@ import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunA
 
 export const CLIENT_TZ = 'Australia/Sydney';
 export const CRON_EXECUTE_TIME = '5:00';
-const CRON_PATTERN = '5:00'.replace(/(.*):(.*)/, '0 $2 $1 * * *'); // 5 am every day
+const PROD_CRON_PATTERN = CRON_EXECUTE_TIME.replace(/(.*):(.*)/, '0 $2 $1 * * *'); // 5 am every day
 
 let cronJob = null;
 
@@ -28,16 +28,12 @@ function stopRunningCronJob() {
   cronJob?.stop();
 }
 
-async function startCronJob() {
-  stopRunningCronJob();
-  cronJob = new CronJob(
-    CRON_PATTERN,
-    onCronJobExecute,
-    null,
-    true,
-    CLIENT_TZ
-  );
-  return cronJob;
+function getCronPattern() {
+  if(process.env.NODE_ENV === 'dev') {
+    return '*/10 * * * * *';
+  } else {
+    return PROD_CRON_PATTERN;
+  }
 }
 
 async function onCronJobExecute() {
@@ -48,12 +44,28 @@ async function onCronJobExecute() {
     .innerJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
     .innerJoin(q => q.from(Portfolio, 'p'), 'p', 'p.id = x."portfolioId"')
     .innerJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')
+    .where(`(x."nextRunAt" at time zone 'utc' at time zone '${CLIENT_TZ}')::DATE = (now() at time zone '${CLIENT_TZ}')::DATE`)
     .getMany();
 
   for (const r of list) {
     await executeSingleRecurringFromCron(r);
   }
-  console.log('[Recurring]'.bgYellow, 'Cron job finished');
+  console.log('[Recurring]'.bgYellow, `Cron job finished ${list.length} recurrings`);
+}
+
+async function startCronJob() {
+  stopRunningCronJob();
+
+  const cronPattern = getCronPattern();
+  const runImmidiately = true;
+  cronJob = new CronJob(
+    cronPattern,
+    onCronJobExecute,
+    null,
+    runImmidiately,
+    CLIENT_TZ
+  );
+  return cronJob;
 }
 
 function logging(log: SysLog) {
@@ -168,16 +180,13 @@ async function raceSingletonLock(): Promise<boolean> {
   return won;
 }
 
-export async function restartCronService(throws = false) {
+export async function startCronService() {
   try {
     const shouldStart = await raceSingletonLock();
     if (!shouldStart) {
       return;
     }
 
-    if (throws) {
-      return startCronJob();
-    }
     startCronJob();
   } catch (e) {
     const log = new SysLog();

@@ -30,7 +30,7 @@ export class Recurring {
   every: number;
   
   @Column({nullable: true})
-  period: 'week' | 'month' | 'year';
+  period: 'day' | 'week' | 'month' | 'year';
 
   @Column({nullable: true})
   lastRunAt: Date;

@@ -9,7 +9,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { getUtcNow } from '../utils/getUtcNow';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Recurring } from '../entity/Recurring';
-import { CLIENT_TZ, CRON_EXECUTE_TIME, testRunRecurring, restartCronService } from '../services/cronService';
+import { CLIENT_TZ, CRON_EXECUTE_TIME, testRunRecurring } from '../services/cronService';
 import { CronLock } from '../entity/CronLock';
 import * as moment from 'moment-timezone';
 import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunAt';
@@ -38,9 +38,6 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
   const repo = getRepository(Recurring);
   await repo.save(recurring);
 
-  // Restart cron service if any recurring changes
-  restartCronService(false);
-
   res.json();
 });
 
@@ -52,7 +49,9 @@ export const listRecurring = handlerWrapper(async (req, res) => {
     .leftJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
     .leftJoin(q => q.from(Portfolio, 'p'), 'p', 'p.id = x."portfolioId"')
     .leftJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')
-    .orderBy('x.nameTemplate', 'ASC')
+    .orderBy('u.email', 'ASC', 'NULLS LAST')
+    .addOrderBy('j.name', 'ASC')
+    .addOrderBy('p.name', 'ASC')
     .select([
       'x.id as id',
       'x."nameTemplate" as "nameTemplate"',
