@@ -1,5 +1,4 @@
-import { Button, Form, Select, Space, Typography, InputNumber } from 'antd';
-import { CronInput } from 'components/CronInput';
+import { Button, Form, Select, Space, Typography, InputNumber, Checkbox, Switch } from 'antd';
 import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -74,30 +73,45 @@ const RecurringForm = (props) => {
             {portfolioList.map((p, i) => (<Select.Option key={i} value={p.id}>
               <Space>
                 <PortfolioAvatar value={p.name} id={p.id} size={40} />
-                <div style={{display: 'flex', flexDirection: 'column'}}>
-                  <div style={{margin: 0, lineHeight: '1rem'}}>{p.name}</div>
-                  <Text style={{margin: 0, lineHeight: '0.8rem'}} type="secondary"><small>{p.email}</small></Text>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ margin: 0, lineHeight: '1rem' }}>{p.name}</div>
+                  <Text style={{ margin: 0, lineHeight: '0.8rem' }} type="secondary"><small>{p.email}</small></Text>
                 </div>
               </Space>
             </Select.Option>))}
           </StyledPortfolioSelect>
         </Form.Item>
         <Form.Item
-          label="Start Date" name="startFrom" rules={[{ required: false, message: 'Invalid date or not a future date', validator: async (rule, value) => {
-            if (value && moment(value).endOf('date').isBefore()) {
-              throw new Error();
+          label="Start On" name="startFrom" rules={[{
+            required: false, message: 'Invalid date or not a future date', validator: async (rule, value) => {
+              if (value && moment(value).endOf('date').isBefore()) {
+                throw new Error();
+              }
             }
-          }}]}
+          }]}
         >
           <DateInput placeholder="DD/MM/YYYY" style={{ display: 'block' }} />
         </Form.Item>
         <Form.Item
-          label="Creation Period" name="cron" rules={[{ required: true, message: ' ' }]}
+          label="Repeat Every" name="every" rules={[{ required: true, message: ' ' }]}
         // help={`Preview: ${cornPreview}`}
         >
           {/* <Input autoSize={{ minRows: 3, maxRows: 20 }} maxLength={20} placeholder="Type here ..." allowClear disabled={loading} /> */}
-          <CronInput />
+          <InputNumber min={1} max={52} />
         </Form.Item>
+        <Form.Item
+          label="Repeat Period" name="period" rules={[{ required: true, message: ' ' }]}
+        // help={`Preview: ${cornPreview}`}
+        >
+          {/* <Input autoSize={{ minRows: 3, maxRows: 20 }} maxLength={20} placeholder="Type here ..." allowClear disabled={loading} /> */}
+          <Select>
+            <Select.Option value="month">Monthly</Select.Option>
+            <Select.Option value="week">Weekly</Select.Option>
+            <Select.Option value="year">Yearly</Select.Option>
+          </Select>
+        </Form.Item>
+
+
         <Form.Item
           label="Due Day (+N days after the recurring executes)" name="dueDay" rules={[{ required: false, message: ' ', type: 'number', min: 1, max: 366 }]}
           help="When the recurring executes, this value will be used to automatically populate the 'Due Date' field (if defined) on the task template."

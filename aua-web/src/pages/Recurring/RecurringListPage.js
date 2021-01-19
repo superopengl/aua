@@ -69,28 +69,6 @@ const RecurringListPage = (props) => {
 
   const isRecurringDeprecated = item => !item.email || !item.taskTemplateId || !item.portfolioName;
 
-  const getNextRunDateString = cron => {
-    try {
-      const interval = cronParser.parseExpression(cron);
-      return interval.next().toString();
-    } catch (e) {
-      if (/L/.test(cron)) {
-        // The last day of month
-        const now = moment();
-        const lastDayOfMonth = now.endOf('month').format('D');
-        const interval = cronParser.parseExpression(cron.replace('L', lastDayOfMonth));
-        let dateString = interval.next().toString(); // The run time in current month
-
-        if (moment(dateString).isBefore(now)) {
-          // If the time has passed by on the last day of the current month,
-          // return the time in the next month.
-          dateString = interval.next().toString();
-        }
-        return dateString;
-      }
-      throw e;
-    }
-  }
   const columnDef = [
     {
       title: 'Task Template',
@@ -122,12 +100,12 @@ const RecurringListPage = (props) => {
       title: 'Recurring Pattern',
       render: (text, record) => {
         const deprecated = isRecurringDeprecated(record);
-        const { cron, startFrom, lastUpdatedAt } = record;
+        const { cron, startFrom, every, period, lastRunAt, nextRunAt } = record;
         return <StylePatternTable>
           <tbody>
             <tr>
               <td colSpan={2}>
-                {cronstrue.toString(cron, { use24HourTimeFormat: false, verbose: true })}
+                Every {every} {period}{every === 1 ? null : 's'}
               </td>
             </tr>
             {startFrom && <tr>
@@ -135,23 +113,23 @@ const RecurringListPage = (props) => {
                 <small>Start From</small>
               </td>
               <td>
-                <Text type="secondary"><small>{moment(startFrom).format('DD MMM YYYY')}</small></Text>
+                <TimeAgo value={startFrom} direction="horizontal" />
               </td>
             </tr>}
+            <tr>
+              <td className="label">
+                <small>Last Run At</small>
+              </td>
+              <td>
+                {!lastRunAt ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={lastRunAt} direction="horizontal" />}
+              </td>
+            </tr>
             <tr>
               <td className="label">
                 <small>Next Run At</small>
               </td>
               <td>
-                {deprecated ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={getNextRunDateString(cron, startFrom)} direction="horizontal" />}
-              </td>
-            </tr>
-            <tr>
-              <td className="label">
-                <small>Last Updated At</small>
-              </td>
-              <td>
-                {deprecated ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={lastUpdatedAt} direction="horizontal" />}
+                {deprecated || !nextRunAt ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={nextRunAt} direction="horizontal" />}
               </td>
             </tr>
           </tbody>
@@ -281,7 +259,7 @@ const RecurringListPage = (props) => {
         visible={formVisible}
         onClose={() => setFormVisible(false)}
         destroyOnClose={true}
-        width={380}
+        width={420}
         // bodyStyle={{ padding: '0 10px' }}
         footer={null}
       >

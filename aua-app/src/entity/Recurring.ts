@@ -25,9 +25,18 @@ export class Recurring {
 
   @Column({nullable: true})
   startFrom?: Date;
+    
+  @Column({nullable: true})
+  every: number;
+  
+  @Column({nullable: true})
+  period: 'week' | 'month' | 'year';
 
-  @Column()
-  lastUpdatedAt: Date;
+  @Column({nullable: true})
+  lastRunAt: Date;
+
+  @Column({nullable: true})
+  nextRunAt: Date;
 }
 
 

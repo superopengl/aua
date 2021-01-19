@@ -4,7 +4,7 @@ import JavascriptTimeAgo from 'javascript-time-ago'
 import { Space, Typography } from 'antd';
 import en from 'javascript-time-ago/locale/en'
 import ReactTimeAgo from 'react-time-ago'
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 import styled from 'styled-components';
 
 JavascriptTimeAgo.addLocale(en);
@@ -19,13 +19,14 @@ font-size: 0.8rem;
   line-height: 15px;
 }
 `
+const CLIENT_TZ = 'Australia/Sydney';
 
 export const TimeAgo = props => {
   const { prefix, value, defaultContent, direction, strong, extra, accurate, showTime } = props;
   if (!value) {
     return defaultContent || null;
   }
-  const m = moment(value);
+  const m = moment.tz(value, CLIENT_TZ);
   const realPrefix = prefix?.trim() ? `${prefix.trim()} ` : null;
   return <StyledSpace size="small" direction="horizontal">
     <Space direction={direction} size="small">

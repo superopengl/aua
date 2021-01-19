@@ -11,13 +11,25 @@ import { TaskTemplate } from '../entity/TaskTemplate';
 import { Recurring } from '../entity/Recurring';
 import { executeRecurring, restartCronService } from '../services/cronService';
 import { CronLock } from '../entity/CronLock';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 
-const tz = 'Australia/Sydney';
+const CLIENT_TZ = 'Australia/Sydney';
+
+function calculateRecurringNextRunAt(recurring: Recurring): Date {
+  const { startFrom, every, period } = recurring;
+  const now = moment();
+  let startMoment = moment(startFrom);
+  if (startMoment.isBefore(now)) {
+    // If the first one hasn't happen
+    return startFrom;
+  }
+
+  return startMoment.tz(CLIENT_TZ).add(every, period).toDate();
+}
 
 export const saveRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const { id, portfolioId, taskTemplateId, cron, dueDay, startFrom } = req.body;
+  const { id, portfolioId, taskTemplateId, cron, dueDay, startFrom, every, period } = req.body;
 
   const portfolio = await getRepository(Portfolio).findOne(portfolioId);
   assert(portfolio, 404, 'Porotofolio is not found');
@@ -31,8 +43,10 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
   recurring.taskTemplateId = taskTemplateId;
   recurring.cron = cron;
   recurring.dueDay = dueDay;
-  recurring.startFrom = startFrom ? moment(startFrom, 'YYYY-MM-DD').toDate() : null;
-  recurring.lastUpdatedAt = getUtcNow();
+  recurring.startFrom = startFrom ? moment.tz(`${startFrom} 5:00`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate() : null;
+  recurring.every = every;
+  recurring.period = period;
+  recurring.nextRunAt = calculateRecurringNextRunAt(recurring);
 
   const repo = getRepository(Recurring);
   await repo.save(recurring);
@@ -51,18 +65,21 @@ export const listRecurring = handlerWrapper(async (req, res) => {
     .leftJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
     .leftJoin(q => q.from(Portfolio, 'p'), 'p', 'p.id = x."portfolioId"')
     .leftJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')
-    .orderBy('x.lastUpdatedAt', 'DESC')
+    .orderBy('x.nameTemplate', 'ASC')
     .select([
       'x.id as id',
       'x."nameTemplate" as "nameTemplate"',
       'x."startFrom" as "startFrom"',
+      'x."every" as "every"',
+      'x."period" as "period"',
       'x."dueDay" as "dueDay"',
       'u.email as email',
       'j.name as "taskTemplateName"',
       `j.id as "taskTemplateId"`,
       'p.name as "portfolioName"',
+      'x."lastRunAt" as "lastRunAt"',
+      'x."nextRunAt" as "nextRunAt"',
       'x.cron as cron',
-      'x."lastUpdatedAt" as "lastUpdatedAt"'
     ])
     .execute();
 
@@ -101,7 +118,7 @@ export const healthCheckRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
 
   const expected = process.env.GIT_HASH;
-  const lock = await getRepository(CronLock).findOne({key: 'cron-singleton-lock'});
+  const lock = await getRepository(CronLock).findOne({ key: 'cron-singleton-lock' });
   const actual = lock?.gitHash;
   const healthy = process.env.NODE_ENV === 'dev' || actual === expected;
 
