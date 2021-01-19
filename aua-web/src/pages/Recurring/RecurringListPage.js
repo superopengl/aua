@@ -235,7 +235,6 @@ const RecurringListPage = (props) => {
           <Table columns={columnDef}
             dataSource={list}
             size="small"
-
             // scroll={{x: 1000}}
             rowKey="id"
             loading={loading}
