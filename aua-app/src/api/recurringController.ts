@@ -9,23 +9,10 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { getUtcNow } from '../utils/getUtcNow';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Recurring } from '../entity/Recurring';
-import { executeRecurring, restartCronService } from '../services/cronService';
+import { CLIENT_TZ, CRON_EXECUTE_TIME, testRunRecurring, restartCronService } from '../services/cronService';
 import { CronLock } from '../entity/CronLock';
 import * as moment from 'moment-timezone';
-
-const CLIENT_TZ = 'Australia/Sydney';
-
-function calculateRecurringNextRunAt(recurring: Recurring): Date {
-  const { startFrom, every, period } = recurring;
-  const now = moment();
-  let startMoment = moment(startFrom);
-  if (startMoment.isBefore(now)) {
-    // If the first one hasn't happen
-    return startFrom;
-  }
-
-  return startMoment.tz(CLIENT_TZ).add(every, period).toDate();
-}
+import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunAt';
 
 export const saveRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
@@ -43,7 +30,7 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
   recurring.taskTemplateId = taskTemplateId;
   recurring.cron = cron;
   recurring.dueDay = dueDay;
-  recurring.startFrom = startFrom ? moment.tz(`${startFrom} 5:00`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate() : null;
+  recurring.startFrom = startFrom ? moment.tz(`${startFrom} ${CRON_EXECUTE_TIME}`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate() : null;
   recurring.every = every;
   recurring.period = period;
   recurring.nextRunAt = calculateRecurringNextRunAt(recurring);
@@ -109,7 +96,7 @@ export const runRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
 
-  const task = await executeRecurring(id);
+  const task = await testRunRecurring(id);
 
   res.json(task);
 });

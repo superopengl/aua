@@ -16,34 +16,44 @@ import * as os from 'os';
 import { sendNewTaskCreatedEmail } from '../utils/sendNewTaskCreatedEmail';
 import * as moment from 'moment-timezone';
 import 'colors';
+import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunAt';
 
-const tz = 'Australia/Sydney';
-const runningTasks = [];
+export const CLIENT_TZ = 'Australia/Sydney';
+export const CRON_EXECUTE_TIME = '5:00';
+const CRON_PATTERN = '5:00'.replace(/(.*):(.*)/, '0 $2 $1 * * *'); // 5 am every day
 
-function stopRunningTasks() {
-  let task;
-  while ((task = runningTasks.shift())) {
-    task.stop();
-  }
+let cronJob = null;
+
+function stopRunningCronJob() {
+  cronJob?.stop();
 }
 
-async function startRecurrings() {
-  console.log('[Recurring]'.bgYellow, 'Starting cron service');
+async function startCronJob() {
+  stopRunningCronJob();
+  cronJob = new CronJob(
+    CRON_PATTERN,
+    onCronJobExecute,
+    null,
+    true,
+    CLIENT_TZ
+  );
+  return cronJob;
+}
+
+async function onCronJobExecute() {
+  console.log('[Recurring]'.bgYellow, 'Cron job is executing');
 
   const list = await getRepository(Recurring)
     .createQueryBuilder('x')
     .innerJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
     .innerJoin(q => q.from(Portfolio, 'p'), 'p', 'p.id = x."portfolioId"')
     .innerJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')
-    .select([
-      'x.*',
-    ])
-    .execute();
+    .getMany();
 
-  stopRunningTasks();
-  const tasks = list.map(r => startSingleRecurring(r));
-  runningTasks.push(...tasks);
-  console.log('[Recurring]'.bgYellow, 'Started cron service');
+  for (const r of list) {
+    await executeSingleRecurringFromCron(r);
+  }
+  console.log('[Recurring]'.bgYellow, 'Cron job finished');
 }
 
 function logging(log: SysLog) {
@@ -57,10 +67,13 @@ function trySetTaskDueDateField(task, dueDay) {
   dueDateField.value = moment().add(dueDay, 'day').toDate();
 }
 
-export async function executeRecurring(recurringId) {
-  assert(recurringId, 400);
-  const recurring = await getRepository(Recurring).findOne({ id: recurringId });
+export async function testRunRecurring(recurringId) {
+  const recurring = await getRepository(Recurring).findOne(recurringId);
   assert(recurring, 404);
+  return executeRecurring(recurringId, false);
+}
+
+async function executeRecurring(recurring: Recurring, resetNextRunAt: boolean) {
   const { taskTemplateId, portfolioId, nameTemplate } = recurring;
 
   const taskName = nameTemplate.replace('{{createdDate}}', moment().format('DD MMM YYYY'));
@@ -80,85 +93,43 @@ export async function executeRecurring(recurringId) {
 
   await getRepository(Task).save(task);
 
+  if (resetNextRunAt) {
+    recurring.lastRunAt = new Date();
+    recurring.nextRunAt = calculateRecurringNextRunAt(recurring);
+    await getRepository(Recurring).save(recurring);
+  }
+
   return task;
 }
 
-function createCronJob(cron: string, startFrom: Date, onRunFn: () => Promise<void>): CronJob {
-  let cronPattern = cron;
-  let onExecuteCallback = onRunFn;
-  if (/L/.test(cron)) {
-    cronPattern = cron.replace('L', '28-31');
-    onExecuteCallback = async () => {
-      const now = moment();
-      const today = now.format('D');
-      const lastDayOfMonth = now.endOf('month').format('D');
-      if (today === lastDayOfMonth) {
-        await onRunFn();
-      }
+async function executeSingleRecurringFromCron(recurring: Recurring): Promise<void> {
+  const { id } = recurring;
+
+  try {
+    console.log('[Recurring]'.bgYellow, `Executing recuring ${id}`);
+    await executeRecurring(recurring, true);
+
+    const log = new SysLog();
+    log.level = 'info';
+    log.message = 'Recurring complete';
+    log.data = {
+      recurringId: id,
     };
+    logging(log);
+
+    console.log('[Recurring]'.bgYellow, `Done with recuring ${id}`);
+  } catch (err) {
+    const log = new SysLog();
+    log.level = 'error';
+    log.message = 'Recurring error';
+    log.data = {
+      recurringId: id,
+      error: errorToJSON(err)
+    };
+    logging(log);
+
+    console.error('[Recurring]'.bgYellow, `Error from recuring ${id}`, err);
   }
-
-  const onExecuteAfterStartDate = () => {
-    console.log('[Recurring]'.bgYellow, 'attempting');
-    if (startFrom) {
-      // startFrom is of Australia/Sydney timezone. 
-      // Have to change to UTC
-      const startUtcMoment = moment.tz(startFrom, tz).startOf('day');
-      const now = moment();
-      if (now.isAfter(startUtcMoment)) {
-        onExecuteCallback();
-      }
-    } else {
-      onExecuteCallback();
-    }
-  }
-
-  const job = new CronJob(
-    cronPattern,
-    onExecuteAfterStartDate,
-    null,
-    false,
-    tz
-  );
-  job.start();
-
-  return job;
-}
-
-function startSingleRecurring(recurring: Recurring): CronJob {
-  const { id, cron, startFrom: startFrom, taskTemplateId, portfolioId } = recurring;
-
-  const cronJob = createCronJob(
-    cron,
-    startFrom,
-    async () => {
-      const task = await executeRecurring(id);
-
-      const log = new SysLog();
-      log.level = 'info';
-      log.message = 'Recurring triggered';
-      log.data = {
-        recurringId: id,
-        taskTemplateId,
-        portfolioId,
-        createdTaskId: task.id
-      };
-
-      logging(log);
-    }
-  );
-
-  const log = new SysLog();
-  log.level = 'info';
-  log.message = 'Recurring complete';
-  log.data = {
-    recurringId: id,
-    cron
-  };
-  logging(log);
-  
-  console.log('[Recurring]'.bgYellow, `Cron started recuring ${id} '${cron}'`);
-  return cronJob;
 }
 
 async function raceSingletonLock(): Promise<boolean> {
@@ -205,9 +176,9 @@ export async function restartCronService(throws = false) {
     }
 
     if (throws) {
-      return startRecurrings();
+      return startCronJob();
     }
-    startRecurrings();
+    startCronJob();
   } catch (e) {
     const log = new SysLog();
     log.message = 'Failed to restart cron service';
