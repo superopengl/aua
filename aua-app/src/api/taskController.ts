@@ -1,6 +1,6 @@
 
 import * as moment from 'moment';
-import { getManager, getRepository, Not } from 'typeorm';
+import { getManager, getRepository, Not, QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Task } from '../entity/Task';
@@ -99,6 +99,9 @@ export const saveTask = handlerWrapper(async (req, res) => {
   task.status = status;
   task.lastUpdatedAt = getNow();
 
+  const dueDateFieldValue = fields.find(f => f.name === 'Due_Date')?.value;
+  task.dueDate = dueDateFieldValue ? moment(dueDateFieldValue, 'DD/MM/YYYY').toDate() : null;
+
   await handleTaskStatusChange(oldStatus, task);
   await repo.save(task);
 
@@ -164,7 +167,8 @@ export const searchTask = handlerWrapper(async (req, res) => {
       `x.agentId as "agentId"`,
       `x.status as status`,
       `x."lastUpdatedAt" as "lastUpdatedAt"`,
-      `m."createdAt" as "lastUnreadMessageAt"`
+      `m."createdAt" as "lastUnreadMessageAt"`,
+      `x."dueDate" as "dueDate"`,
       // `x."signedAt" as "signedAt"`,
     ]);
   if (text) {

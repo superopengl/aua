@@ -73,11 +73,13 @@ function logging(log: SysLog) {
   getRepository(SysLog).save(log).catch(() => { });
 }
 
-function trySetTaskDueDateField(task, dueDay) {
+function trySetTaskDueDateField(task: Task, dueDay: number) {
   if (!dueDay) return;
   const dueDateField = task.fields.find(x => x.name === 'Due_Date');
   if (!dueDateField) return;
-  dueDateField.value = moment().add(dueDay, 'day').format('DD/MM/YYYY');
+  const dueDateMoment = moment().add(dueDay, 'day');
+  dueDateField.value = dueDateMoment.format('DD/MM/YYYY');
+  task.dueDate = dueDateMoment.toDate();
 }
 
 export async function testRunRecurring(recurringId: string) {

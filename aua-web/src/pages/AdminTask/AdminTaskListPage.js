@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, MessageOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Modal, Select, Space, Table, Tooltip, Typography } from 'antd';
+import { Button, Input, Layout, Modal, Select, Space, Table, Tooltip, Typography, Divider } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import HomeHeader from 'components/HomeHeader';
 import { TaskStatus } from 'components/TaskStatus';
@@ -27,6 +27,7 @@ const ContainerStyled = styled.div`
   }
 
   .ant-table {
+    margin-top: 20px;
     font-size: 12px !important;
 
     .ant-table-column-sorters {
@@ -152,15 +153,12 @@ const AdminTaskListPage = (props) => {
         return <TimeAgo value={text} />;
       }
     },
-    // {
-    //   title: 'Signed At',
-    //   // dataIndex: 'signedAt',
-    //   sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
-    //   render: (text, record) => {
-    //     return <Space size="small"><TimeAgo value={text} extra={<Button shape="circle" icon={<SearchOutlined />} onClick={() => handleShowSignDetail(record.id)} />} /></Space>;
-    //   }
-    // },
-
+    {
+      title: 'Due Date',
+      dataIndex: 'dueDate',
+      sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
+      render: (value, record) => value && <TimeAgo value={value} />
+    },
     {
       title: 'Assignee',
       dataIndex: 'agentId',

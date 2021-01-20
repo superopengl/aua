@@ -52,6 +52,9 @@ export class Task {
 
   @Column({ type: 'json', default: [] })
   docs: TaskDoc[];
-}
 
+  @Column({nullable: true})
+  @Index()
+  dueDate: Date;
+}
 
