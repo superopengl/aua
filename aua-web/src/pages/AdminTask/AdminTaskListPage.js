@@ -195,16 +195,16 @@ const AdminTaskListPage = (props) => {
       </Select>
     },
     {
-      title: 'Action',
+      // title: 'Action',
       // fixed: 'right',
       // width: 200,
       render: (text, record) => (
         <Space size="small">
           <Tooltip placement="bottom" title="Proceed task">
-            <Link to={`/tasks/${record.id}/proceed`}><Button shape="circle" icon={<EditOutlined />}></Button></Link>
+            <Link to={`/tasks/${record.id}/proceed`}><Button type="link" icon={<EditOutlined />}></Button></Link>
           </Tooltip>
           <Tooltip placement="bottom" title="Delete task">
-            <Button shape="circle" danger onClick={e => handleDelete(e, record)} icon={<DeleteOutlined />}></Button>
+            <Button type="link" danger onClick={e => handleDelete(e, record)} icon={<DeleteOutlined />}></Button>
           </Tooltip>
         </Space>
       ),

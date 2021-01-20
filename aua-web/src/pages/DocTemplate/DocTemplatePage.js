@@ -75,14 +75,14 @@ export const DocTemplatePage = () => {
       render: (text) => <TimeAgo value={text} />
     },
     {
-      title: 'Action',
+      // title: 'Action',
       render: (text, record) => (
         <Space size="small">
           <Tooltip placement="bottom" title="Edit doc template">
-            <Button shape="circle" icon={<EditOutlined />} onClick={e => handleEdit(e, record)} />
+            <Button type="link" icon={<EditOutlined />} onClick={e => handleEdit(e, record)} />
           </Tooltip>
           <Tooltip placement="bottom" title="Delete doc template">
-            <Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, record)} />
+            <Button type="link" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, record)} />
           </Tooltip>
         </Space>
       ),

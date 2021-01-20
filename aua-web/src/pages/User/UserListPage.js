@@ -89,30 +89,30 @@ const UserListPage = () => {
       render: (text) => <TimeAgo value={text} />,
     },
     {
-      title: 'Action',
+      // title: 'Action',
       // fixed: 'right',
       // width: 200,
       render: (text, user) => {
         return (
           <Space size="small" style={{ width: '100%' }}>
             <Tooltip placement="bottom" title="Update profile">
-              <Button shape="circle" icon={<UserOutlined />} onClick={e => openProfileModal(e, user)} />
+              <Button type="link" icon={<UserOutlined />} onClick={e => openProfileModal(e, user)} />
             </Tooltip>
             <Tooltip placement="bottom" title="Set password">
-              <Button shape="circle" icon={<SafetyCertificateOutlined />} onClick={e => openSetPasswordModal(e, user)} />
+              <Button type="link" icon={<SafetyCertificateOutlined />} onClick={e => openSetPasswordModal(e, user)} />
             </Tooltip>
             <Tooltip placement="bottom" title="Impersonate">
-              <Button shape="circle" onClick={e => handleImpersonante(e, user)} disabled={context.user.email === user.email}>
+              <Button type="link" onClick={e => handleImpersonante(e, user)} disabled={context.user.email === user.email}>
                 <FaTheaterMasks style={{ position: 'relative', top: 1 }} size={20} />
               </Button>
             </Tooltip>
             <Tooltip placement="bottom" title="Portfolio">
-              <Button shape="circle" onClick={e => handlePortfolioForUser(e, user)} disabled={user.role !== 'client'}>
+              <Button type="link" onClick={e => handlePortfolioForUser(e, user)} disabled={user.role !== 'client'}>
                 <IdcardOutlined style={{ position: 'relative', top: 1 }} size={20} />
               </Button>
             </Tooltip>
             <Tooltip placement="bottom" title="Delete user">
-              <Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, user)} disabled={user.email === 'admin@auao.com.au'} />
+              <Button type="link" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, user)} disabled={user.email === 'admin@auao.com.au'} />
             </Tooltip>
           </Space>
         )

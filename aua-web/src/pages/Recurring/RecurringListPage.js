@@ -15,13 +15,13 @@ import { listRecurring, deleteRecurring, runRecurring, healthCheckRecurring } fr
 import RecurringForm from './RecurringForm';
 import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import { notify } from 'util/notify';
-import cronstrue from 'cronstrue';
-import * as cronParser from 'cron-parser';
+import * as ReactDom from 'react-dom';
 
 const { Title, Link: TextLink } = Typography;
 
 const ContainerStyled = styled.div`
-  margin: 6rem 1rem 2rem 1rem;
+margin: 6rem 0 2rem 0;
+padding: 0 1rem 4rem;
 `;
 
 const StyledTitleRow = styled.div`
@@ -55,7 +55,7 @@ const StyledDrawer = styled(Drawer)`
 
 const StylePatternTable = styled.table`
 td.label {
-  width: 100px;
+  width: 70px;
 }
 `;
 
@@ -118,7 +118,7 @@ const RecurringListPage = (props) => {
             </tr>}
             <tr>
               <td className="label">
-                <small>Last Run At</small>
+                <small>Last Run</small>
               </td>
               <td>
                 {!lastRunAt ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={lastRunAt} direction="horizontal" />}
@@ -126,7 +126,7 @@ const RecurringListPage = (props) => {
             </tr>
             <tr>
               <td className="label">
-                <small>Next Run At</small>
+                <small>Next Run</small>
               </td>
               <td>
                 {deprecated || !nextRunAt ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={nextRunAt} direction="horizontal" />}
@@ -137,16 +137,21 @@ const RecurringListPage = (props) => {
       }
     },
     {
-      title: 'Action',
+      title: 'Due Day',
+      dataIndex: 'dueDay',
+      render: (text) => text,
+    },
+    {
+      // title: 'Action',
       // fixed: 'right',
       // width: 200,
       render: (text, record) => {
         const deprecated = isRecurringDeprecated(record);
         return (
           <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
-            {!deprecated && <Tooltip placement="bottom" title="Edit recurring"><Button shape="circle" icon={<EditOutlined />} onClick={e => handleEditRecurring(e, record)} /></Tooltip>}
-            {!deprecated && <Tooltip placement="bottom" title="Run immediately"><Button shape="circle" icon={<CaretRightFilled />} onClick={e => handleRunRecurring(e, record)} /></Tooltip>}
-            <Tooltip placement="bottom" title="Delete recurring"><Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, record)} /></Tooltip>
+            {!deprecated && <Tooltip placement="bottom" title="Edit recurring"><Button type="link" icon={<EditOutlined />} onClick={e => handleEditRecurring(e, record)} /></Tooltip>}
+            {!deprecated && <Tooltip placement="bottom" title="Run immediately"><Button type="link" icon={<CaretRightFilled />} onClick={e => handleRunRecurring(e, record)} /></Tooltip>}
+            <Tooltip placement="bottom" title="Delete recurring"><Button type="link" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, record)} /></Tooltip>
           </Space>
         )
       },
@@ -154,12 +159,18 @@ const RecurringListPage = (props) => {
   ];
 
   const loadList = async () => {
-    setLoading(true);
-    const list = await listRecurring();
-    setList(list);
-    const healthCheckResult = await healthCheckRecurring();
-    setHealthCheckResult(healthCheckResult);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const list = await listRecurring();
+      const healthCheckResult = await healthCheckRecurring();
+      ReactDom.unstable_batchedUpdates(() => {
+        setList(list);
+        setHealthCheckResult(healthCheckResult);
+        setLoading(false);
+      });
+    } catch {
+      setLoading(false);
+    }
   }
 
   React.useEffect(() => {
@@ -226,7 +237,7 @@ const RecurringListPage = (props) => {
 
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             {healthCheckResult && <Alert
-              message={healthCheckResult.error || `Recurring service is healthy. Started at ${moment(healthCheckResult.lock.lockedAt).format('DD MMM YYYY hh:mm A')}`}
+              message={healthCheckResult.error || <>Recurring service is healthy. Next run <TimeAgo value={healthCheckResult.nextRunAt} size="default" type="primary" direction="horizontal"/></>}
               type={healthCheckResult.error ? 'error' : 'success'}
               showIcon />}
             <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Recurring</Button>

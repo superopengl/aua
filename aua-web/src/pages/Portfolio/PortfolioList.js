@@ -104,8 +104,8 @@ const PortfolioList = props => {
               description={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
                 <TimeAgo value={item.lastUpdatedAt} prefix="Last Updated" />
                 <Space>
-                  <Button key="edit" shape="circle" disabled={loading} icon={<EditOutlined />}></Button>
-                  <Button key="delete" shape="circle" danger disabled={loading} onClick={e => handleDelete(e, item)} icon={<DeleteOutlined />}></Button>
+                  <Button key="edit" type="link" disabled={loading} icon={<EditOutlined />}></Button>
+                  <Button key="delete" type="link" danger disabled={loading} onClick={e => handleDelete(e, item)} icon={<DeleteOutlined />}></Button>
                 </Space>
               </Space>}
             />

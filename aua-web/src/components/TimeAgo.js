@@ -12,7 +12,7 @@ JavascriptTimeAgo.addLocale(en);
 const { Text } = Typography;
 
 const StyledSpace = styled(Space)`
-font-size: 0.8rem;
+// font-size: 0.8rem;
 
 .ant-space-item {
   margin-bottom: 0 !important;
@@ -22,16 +22,19 @@ font-size: 0.8rem;
 const CLIENT_TZ = 'Australia/Sydney';
 
 export const TimeAgo = props => {
-  const { prefix, value, defaultContent, direction, strong, extra, accurate, showTime } = props;
+  const { prefix, value, defaultContent, direction, strong, extra, accurate, showTime, size, type } = props;
   if (!value) {
     return defaultContent || null;
   }
   const m = moment.tz(value, CLIENT_TZ);
   const realPrefix = prefix?.trim() ? `${prefix.trim()} ` : null;
+  const expression = m.format(showTime ? 'DD MMM YYYY HH:mm' : 'DD MMM YYYY');
   return <StyledSpace size="small" direction="horizontal">
     <Space direction={direction} size="small">
-      <Text strong={strong} type="secondary">{realPrefix}<ReactTimeAgo date={m.toDate()} /></Text>
-      {accurate && <Text strong={strong} type="secondary"><small>{m.format(showTime ? 'DD MMM YYYY HH:mm' : 'DD MMM YYYY')}</small></Text>}
+      <Text strong={strong} type={type}>{realPrefix}<ReactTimeAgo date={m.toDate()} /></Text>
+      {accurate && <Text strong={strong} type={type}>
+        {size === 'small' ? <small>{expression}</small> : expression}
+      </Text>}
     </Space>
     {extra}
   </StyledSpace>
@@ -46,6 +49,8 @@ TimeAgo.propTypes = {
   strong: PropTypes.bool,
   accurate: PropTypes.bool.isRequired,
   showTime: PropTypes.bool,
+  size: PropTypes.oneOf(['small', 'default']),
+  type: PropTypes.oneOf(['primary', 'secondary'])
 };
 
 TimeAgo.defaultProps = {
@@ -54,4 +59,6 @@ TimeAgo.defaultProps = {
   strong: false,
   accurate: true,
   showTime: true,
+  size: 'small',
+  type: 'secondary'
 };

@@ -76,10 +76,10 @@ export const BlogList = props => {
               </Space>
               {!readonly && <Space>
                 <Tooltip key="edit" placement="bottom" title="Edit post">
-                  <Button shape="circle"  icon={<EditOutlined />} onClick={e => handleEdit(e, item)} />
+                  <Button type="link"  icon={<EditOutlined />} onClick={e => handleEdit(e, item)} />
                 </Tooltip>
                 <Tooltip key="delete" placement="bottom" title="Delete post">
-                  <Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, item)} />
+                  <Button type="link" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, item)} />
                 </Tooltip>
               </Space>}
             </Space>

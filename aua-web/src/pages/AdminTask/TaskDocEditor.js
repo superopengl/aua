@@ -160,16 +160,16 @@ export const TaskDocEditor = (props) => {
       render: (value) => value ? <TimeAgo value={value} /> : null
     },
     {
-      title: 'Action',
+      // title: 'Action',
       render: (value, doc) => <Space >
         <Tooltip title={doc.requiresSign ? 'Revoke sign request' : 'Requires sign'}>
-          <Button shape="circle" type={doc.requiresSign ? 'primary' : 'secondary'} onClick={() => toggleRequiresSign(doc)} icon={<HighlightOutlined />} disabled={!doc.fileId || doc.signedAt}></Button>
+          <Button type="link" type={doc.requiresSign ? 'primary' : 'secondary'} onClick={() => toggleRequiresSign(doc)} icon={<HighlightOutlined />} disabled={!doc.fileId || doc.signedAt}></Button>
         </Tooltip>
         <Tooltip title={`${doc.isFeedback ? 'Exclude from' : 'Include into'} feedback documents`}>
-          <Button shape="circle" type={doc.isFeedback ? 'primary' : 'secondary'} onClick={() => toggleIsFeedback(doc)} icon={<FlagOutlined />} disabled={!doc.fileId}></Button>
+          <Button type="link" type={doc.isFeedback ? 'primary' : 'secondary'} onClick={() => toggleIsFeedback(doc)} icon={<FlagOutlined />} disabled={!doc.fileId}></Button>
         </Tooltip>
         <Tooltip title="Delete document">
-          <Button shape="circle" onClick={() => handleDeleteDoc(doc)} danger icon={<DeleteOutlined />}></Button>
+          <Button type="link" onClick={() => handleDeleteDoc(doc)} danger icon={<DeleteOutlined />}></Button>
         </Tooltip>
       </Space>
     },

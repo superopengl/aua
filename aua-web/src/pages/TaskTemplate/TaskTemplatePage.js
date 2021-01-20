@@ -77,15 +77,15 @@ export const TaskTemplatePage = props => {
       render: (text) => <TimeAgo value={text} />
     },
     {
-      title: 'Action',
+      // title: 'Action',
       render: (text, record) => (
         <Space size="small">
           <Tooltip placement="bottom" title="Edit task template">
 
-          <Button shape="circle" icon={<EditOutlined />} onClick={e => handleEdit(e, record)} />
+          <Button type="link" icon={<EditOutlined />} onClick={e => handleEdit(e, record)} />
           </Tooltip>
           <Tooltip placement="bottom" title="Delete task template">
-          <Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, record)} />
+          <Button type="link" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, record)} />
           </Tooltip>
         </Space>
       ),

@@ -107,9 +107,15 @@ export const healthCheckRecurring = handlerWrapper(async (req, res) => {
   const actual = lock?.gitHash;
   const healthy = process.env.NODE_ENV === 'dev' || actual === expected;
 
+  let nextCronRun = moment(CRON_EXECUTE_TIME, 'HH:mm');
+  if(nextCronRun.isBefore()) {
+    nextCronRun = nextCronRun.add(1, 'day');
+  }
+
   const result = {
     error: healthy ? null : `Expecting ${expected} but got ${actual}`,
     lock,
+    nextRunAt: nextCronRun.toDate()
   };
 
   res.json(result);

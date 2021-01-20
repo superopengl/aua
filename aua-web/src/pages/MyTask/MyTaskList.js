@@ -71,9 +71,9 @@ const MyTaskList = (props) => {
           description={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <TimeAgo value={item.lastUpdatedAt} prefix="Last Updated" accurate={true} />
             <Space>
-              <Button shape="circle" key="action" type="link" onClick={() => actionOnTask(item)} icon={getActionIcon(item.status)}></Button>
+              <Button type="link" key="action" type="link" onClick={() => actionOnTask(item)} icon={getActionIcon(item.status)}></Button>
               {/* {item.status === 'draft' && <>
-                  <Button key="delete" shape="circle" danger disabled={loading} onClick={e => handleDelete(e, item)} icon={<DeleteOutlined />}></Button>
+                  <Button key="delete" type="link" danger disabled={loading} onClick={e => handleDelete(e, item)} icon={<DeleteOutlined />}></Button>
                 </>} */}
             </Space>
           </Space>

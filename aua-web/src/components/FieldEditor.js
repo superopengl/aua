@@ -150,7 +150,7 @@ const FieldEditor = (props) => {
       />
     },
     {
-      title: 'Action',
+      // title: 'Action',
       render: (text, record, index) => (
         <Space size="small">
           <Button type="link" icon={<UpOutlined />} onClick={() => moveUp(index)} />
