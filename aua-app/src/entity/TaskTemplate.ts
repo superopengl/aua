@@ -9,7 +9,7 @@ export class TaskTemplate {
   @Index({ unique: true })
   name: string;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @Column({ default: () => `now()` })
   createdAt?: Date;
 
   @Column()

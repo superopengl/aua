@@ -3,7 +3,7 @@ import { getRepository } from 'typeorm';
 import { Blog } from '../entity/Blog';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { getUtcNow } from '../utils/getUtcNow';
+import { getNow } from '../utils/getNow';
 
 export const saveBlog = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
@@ -16,7 +16,7 @@ export const saveBlog = handlerWrapper(async (req, res) => {
   blog.title = title;
   blog.md = md;
   blog.files = files;
-  blog.lastUpdatedAt = getUtcNow();
+  blog.lastUpdatedAt = getNow();
 
   await repo.save(blog);
 

@@ -4,7 +4,7 @@ import { assert, assertRole } from '../utils/assert';
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { getUtcNow } from '../utils/getUtcNow';
+import { getNow } from '../utils/getNow';
 import { DocTemplate } from '../entity/DocTemplate';
 import * as moment from 'moment';
 import { uploadToS3 } from '../utils/uploadToS3';
@@ -30,7 +30,7 @@ export const saveDocTemplate = handlerWrapper(async (req, res) => {
   docTemplate.description = description;
   docTemplate.md = md;
   docTemplate.variables = extractVariables(md);
-  docTemplate.lastUpdatedAt = getUtcNow();
+  docTemplate.lastUpdatedAt = getNow();
 
   const repo = getRepository(DocTemplate);
   await repo.save(docTemplate);
@@ -81,7 +81,7 @@ export const applyDocTemplate = handlerWrapper(async (req, res) => {
 
   const usedVars = variables.reduce((pre, cur) => {
     const pattern = `{{${cur}}}`;
-    const replacement = pattern === `{{now}}` ? moment(getUtcNow()).format('D MMM YYYY') : _.get(inboundVariables, cur, '');
+    const replacement = pattern === `{{now}}` ? moment(getNow()).format('D MMM YYYY') : _.get(inboundVariables, cur, '');
     pre[cur] = replacement;
     return pre;
   }, {});
@@ -116,7 +116,7 @@ export const createPdfFromDocTemplate = handlerWrapper(async (req, res) => {
 
   const bakedMd = variables.reduce((pre, cur) => {
     const pattern = new RegExp(`{{${cur}}}`, 'g');
-    const replacement = cur === `now` ? moment(getUtcNow()).format('D MMM YYYY') : inboundVariables[cur];
+    const replacement = cur === `now` ? moment(getNow()).format('D MMM YYYY') : inboundVariables[cur];
 
     assert(replacement !== undefined, 400, `Variable '${cur}' is missing`);
     return pre.replace(pattern, replacement);

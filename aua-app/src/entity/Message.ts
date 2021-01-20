@@ -5,7 +5,7 @@ export class Message {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @Column({ default: () => `now()` })
   @Index()
   createdAt?: Date;
 

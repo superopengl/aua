@@ -5,7 +5,7 @@ export class Blog {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @Column({ default: () => `now()` })
   createdAt?: Date;
 
   @Column()

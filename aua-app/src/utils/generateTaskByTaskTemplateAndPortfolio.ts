@@ -3,7 +3,7 @@ import { getRepository, In } from 'typeorm';
 import { assert } from './assert';
 import * as _ from 'lodash';
 import { Task } from '../entity/Task';
-import { getUtcNow } from './getUtcNow';
+import { getNow } from './getNow';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Portfolio } from '../entity/Portfolio';
 import { TaskStatus } from '../types/TaskStatus';
@@ -66,7 +66,7 @@ export const generateTaskByTaskTemplateAndPortfolio = async (taskTemplateId, por
   task.portfolioId = portfolioId;
   task.fields = fields;
   task.docs = mapDocTemplatesToGenDocs(docTemplates);
-  task.lastUpdatedAt = getUtcNow();
+  task.lastUpdatedAt = getNow();
   task.status = TaskStatus.TODO;
 
   return task;

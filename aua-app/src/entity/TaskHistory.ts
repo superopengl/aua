@@ -7,7 +7,7 @@ export class TaskHistory {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @Column({ default: () => `now()` })
   historyCreatedAt?: Date;
 
   @Column('uuid')

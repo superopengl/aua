@@ -5,7 +5,7 @@ export class SysLog {
     @PrimaryGeneratedColumn()
     id?: number;
 
-    @Column({ default: () => `timezone('UTC', now())` })
+    @Column({ default: () => `now()` })
     createdAt?: Date;
 
     @Column({ default: 'system' })

@@ -6,7 +6,7 @@ export class TaskComment {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @Column({ default: () => `now()` })
   createdAt?: Date;
 
   @Column('uuid')

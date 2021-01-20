@@ -10,7 +10,7 @@ export class Portfolio {
   @Index()
   userId: string;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @Column({ default: () => `now()` })
   createdAt?: Date;
 
   @Column()

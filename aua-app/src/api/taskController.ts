@@ -11,7 +11,7 @@ import { sendEmail } from '../services/emailService';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { generateTaskByTaskTemplateAndPortfolio } from '../utils/generateTaskByTaskTemplateAndPortfolio';
-import { getUtcNow } from '../utils/getUtcNow';
+import { getNow } from '../utils/getNow';
 import { guessDisplayNameFromFields } from '../utils/guessDisplayNameFromFields';
 import { Portfolio } from '../entity/Portfolio';
 import * as _ from 'lodash';
@@ -97,7 +97,7 @@ export const saveTask = handlerWrapper(async (req, res) => {
   task.fields = fields;
   task.docs = docs;
   task.status = status;
-  task.lastUpdatedAt = getUtcNow();
+  task.lastUpdatedAt = getNow();
 
   await handleTaskStatusChange(oldStatus, task);
   await repo.save(task);
@@ -255,7 +255,7 @@ export const signTaskDoc = handlerWrapper(async (req, res) => {
   const oldStatus = task.status;
 
   if (files?.length) {
-    const now = getUtcNow();
+    const now = getNow();
     task.docs.filter(d => d.requiresSign && files.includes(d.fileId)).forEach(d => d.signedAt = now);
   }
 
@@ -336,7 +336,7 @@ export const markTaskNotifyRead = handlerWrapper(async (req, res) => {
   const { id: taskId } = req.params;
   const { user: { id: userId, role } } = req as any;
   const repo = getRepository(Message);
-  const now = getUtcNow();
+  const now = getNow();
   // Mark notification read
   let query;
   switch (role) {

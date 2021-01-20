@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { Portfolio } from '../entity/Portfolio';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { getUtcNow } from '../utils/getUtcNow';
+import { getNow } from '../utils/getNow';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Recurring } from '../entity/Recurring';
 import { CLIENT_TZ, CRON_EXECUTE_TIME, testRunRecurring } from '../services/cronService';

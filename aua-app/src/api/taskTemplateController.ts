@@ -4,7 +4,7 @@ import { assert, assertRole } from '../utils/assert';
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { getUtcNow } from '../utils/getUtcNow';
+import { getNow } from '../utils/getNow';
 import { TaskTemplate } from '../entity/TaskTemplate';
 
 export const saveTaskTemplate = handlerWrapper(async (req, res) => {
@@ -19,7 +19,7 @@ export const saveTaskTemplate = handlerWrapper(async (req, res) => {
   taskTemplate.name = name;
   taskTemplate.docTemplateIds = docTemplateIds;
   taskTemplate.fields = fields.filter(f => f.name?.trim() && f.type?.trim());
-  taskTemplate.lastUpdatedAt = getUtcNow();
+  taskTemplate.lastUpdatedAt = getNow();
 
   const repo = getRepository(TaskTemplate);
   await repo.save(taskTemplate);

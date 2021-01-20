@@ -4,7 +4,7 @@ import { Task } from '../entity/Task';
 import { Message } from '../entity/Message';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { getUtcNow } from '../utils/getUtcNow';
+import { getNow } from '../utils/getNow';
 
 async function listMessageForClient(clientId, pagenation, unreadOnly) {
    const query =  getManager()
@@ -148,7 +148,7 @@ export const getMessage = handlerWrapper(async (req, res) => {
   assert(item, 404);
 
   if (isClient) {
-    await repo.update(query, { readAt: getUtcNow() });
+    await repo.update(query, { readAt: getNow() });
   }
 
   res.json(item);

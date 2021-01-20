@@ -5,7 +5,7 @@ import { Portfolio } from '../entity/Portfolio';
 import { User } from '../entity/User';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { getUtcNow } from '../utils/getUtcNow';
+import { getNow } from '../utils/getNow';
 import { guessDisplayNameFromFields } from '../utils/guessDisplayNameFromFields';
 import { sendNewPortfolioEmail } from '../utils/sendNewPortfolioEmail';
 
@@ -21,7 +21,7 @@ export const savePortfolio = handlerWrapper(async (req, res) => {
   portfolio.name = guessDisplayNameFromFields(fields);
   portfolio.fields = fields;
   portfolio.type = type;
-  portfolio.lastUpdatedAt = getUtcNow();
+  portfolio.lastUpdatedAt = getNow();
 
   const repo = getRepository(Portfolio);
   await repo.save(portfolio);

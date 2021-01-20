@@ -7,7 +7,7 @@ import { assert } from '../utils/assert';
 import { TaskStatus } from '../types/TaskStatus';
 import { Task } from '../entity/Task';
 import errorToJSON from 'error-to-json';
-import { getUtcNow } from '../utils/getUtcNow';
+import { getNow } from '../utils/getNow';
 import { CronLock } from '../entity/CronLock';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Portfolio } from '../entity/Portfolio';
@@ -163,7 +163,7 @@ async function raceSingletonLock(): Promise<boolean> {
     },
     {
       gitHash,
-      lockedAt: getUtcNow(),
+      lockedAt: getNow(),
       winner: hostname
     }
   );

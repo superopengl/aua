@@ -4,7 +4,7 @@ import { File } from '../entity/File';
 import { assert } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assertRole } from '../utils/assert';
-import { getUtcNow } from '../utils/getUtcNow';
+import { getNow } from '../utils/getNow';
 import { Task } from '../entity/Task';
 import { getS3ObjectStream, uploadToS3 } from '../utils/uploadToS3';
 import { v4 as uuidv4 } from 'uuid';
@@ -28,7 +28,7 @@ export const downloadFile = handlerWrapper(async (req, res) => {
   if (role === 'client') {
     assert(task.userId === userId, 404);
     // // Only record the read by client
-    const now = getUtcNow();
+    const now = getNow();
     taskDoc.lastReadAt = now;
     await taskRepo.save(task);
 

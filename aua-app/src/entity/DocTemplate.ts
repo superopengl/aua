@@ -13,7 +13,7 @@ export class DocTemplate {
   @Column({default: ''})
   description: string;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @Column({ default: () => `now()` })
   createdAt?: Date;
 
   @Column()

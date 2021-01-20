@@ -9,7 +9,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @Column({ default: () => `now()` })
   createdAt?: Date;
 
   // @Index('user_email_unique', { unique: true })

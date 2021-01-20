@@ -9,7 +9,7 @@ import { UserStatus } from '../types/UserStatus';
 import { computeUserSecret } from '../utils/computeUserSecret';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { sendEmail } from '../services/emailService';
-import { getUtcNow } from '../utils/getUtcNow';
+import { getNow } from '../utils/getNow';
 import { Role } from '../types/Role';
 import * as jwt from 'jsonwebtoken';
 import { attachJwtCookie, clearJwtCookie } from '../utils/jwt';
@@ -49,7 +49,7 @@ export const login = handlerWrapper(async (req, res) => {
   const hash = computeUserSecret(password, user.salt);
   assert(hash === user.secret, 400, 'User or password is not valid');
 
-  user.lastLoggedInAt = getUtcNow();
+  user.lastLoggedInAt = getNow();
   user.resetPasswordToken = null;
   user.status = UserStatus.Enabled;
 
@@ -273,8 +273,8 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
   user.givenName = givenName || user.givenName;
   user.surname = surname || user.surname;
   user.loginType = 'google';
-  user.lastLoggedInAt = getUtcNow();
-  user.lastNudgedAt = getUtcNow();
+  user.lastLoggedInAt = getNow();
+  user.lastNudgedAt = getNow();
 
   await getRepository(User).save(user);
 
