@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { UserStatus } from '../types/UserStatus';
 import { computeUserSecret } from '../utils/computeUserSecret';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { sendEmail } from '../services/emailService';
+import { sendEmail, SYSTEM_EMAIL_SENDER } from '../services/emailService';
 import { getNow } from '../utils/getNow';
 import { Role } from '../types/Role';
 import * as jwt from 'jsonwebtoken';
@@ -110,7 +110,7 @@ export const signin = handlerWrapper(async (req, res) => {
     vars: {
       email
     },
-    shouldBcc: true
+    bcc: [SYSTEM_EMAIL_SENDER]
   });
 
   const info = {
@@ -135,7 +135,6 @@ async function setUserToResetPasswordStatus(user: User) {
       toWhom: getEmailRecipientName(user),
       url
     },
-    shouldBcc: false
   });
 
   await userRepo.save(user);
@@ -221,7 +220,6 @@ export const handleInviteUser = async user => {
       email: user.email,
       url
     },
-    shouldBcc: false
   });
 
   await getRepository(User).save(user);

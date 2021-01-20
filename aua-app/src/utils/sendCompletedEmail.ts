@@ -1,9 +1,10 @@
 import { getRepository } from 'typeorm';
 import { Task } from '../entity/Task';
 import { User } from '../entity/User';
-import { sendEmail } from '../services/emailService';
+import { sendEmail, SYSTEM_EMAIL_SENDER } from '../services/emailService';
 import { File } from '../entity/File';
 import { getEmailRecipientName } from './getEmailRecipientName';
+import { getUserEmailAddress } from './getUserEmailAddress';
 
 
 export async function sendCompletedEmail(task: Task) {
@@ -20,6 +21,7 @@ export async function sendCompletedEmail(task: Task) {
 
   await sendEmail({
     to: user.email,
+    bcc: [await getUserEmailAddress(task.agentId), SYSTEM_EMAIL_SENDER],
     template: 'taskComplete',
     vars: {
       toWhom: getEmailRecipientName(user),
@@ -28,6 +30,5 @@ export async function sendCompletedEmail(task: Task) {
       taskName,
     },
     attachments,
-    shouldBcc: true
   });
 }

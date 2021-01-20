@@ -8,7 +8,7 @@ import * as path from 'path';
 import { logError } from '../utils/logger';
 
 let emailerInstance = null;
-const sender = 'AU Accounting Office <info@auao.com.au>';
+export const SYSTEM_EMAIL_SENDER = 'AU Accounting Office <info@auao.com.au>';
 
 function getEmailer() {
   if (!emailerInstance) {
@@ -27,7 +27,7 @@ function getEmailer() {
 }
 
 export function sendEmail(req: EmailRequest) {
-  const { to, template, vars, shouldBcc, attachments } = req;
+  const { to, template, vars, bcc, attachments } = req;
   assert(to, 400, 'Email recipient is not specified');
   assert(template, 400, 'Email template is not specified');
 
@@ -36,12 +36,14 @@ export function sendEmail(req: EmailRequest) {
     ...vars
   };
 
+  const bccAddresses = bcc?.filter(b => !!b);
+
   getEmailer().send({
     template: path.join(__dirname, 'emailTemplates', template),
     locals,
     message: {
-      from: sender,
-      bcc: shouldBcc ? sender : undefined,
+      from: SYSTEM_EMAIL_SENDER,
+      bcc: bccAddresses?.length ? bccAddresses : undefined,
       to,
       attachments
     }
@@ -55,7 +57,7 @@ export class EmailRequest {
   template: string;
   vars: object;
   attachments?: { filename: string, path: string }[];
-  shouldBcc?: boolean = false;
+  bcc?: string[];
 }
 
 // function sanitizeVars(vars) {

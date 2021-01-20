@@ -119,7 +119,6 @@ export const deleteUser = handlerWrapper(async (req, res) => {
       vars: {
         toWhom: getEmailRecipientName(user),
       },
-      shouldBcc: false
     });
 
   }
