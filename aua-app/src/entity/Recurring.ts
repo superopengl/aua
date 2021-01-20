@@ -1,4 +1,4 @@
-import { Column, PrimaryColumn, Entity } from 'typeorm';
+import { Column, PrimaryColumn, Entity, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Recurring {
@@ -17,7 +17,7 @@ export class Recurring {
   @Column('uuid')
   portfolioId: string;
 
-  @Column()
+  @Column({nullable: true})
   cron: string;
 
   @Column({nullable: true})
@@ -37,6 +37,9 @@ export class Recurring {
 
   @Column({nullable: true})
   nextRunAt: Date;
+
+  @UpdateDateColumn()
+  lastUpdatedAt: Date;
 }
 
 

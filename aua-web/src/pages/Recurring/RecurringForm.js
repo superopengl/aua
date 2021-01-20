@@ -86,8 +86,8 @@ const RecurringForm = (props) => {
           label="Start On (First Run)" name="startFrom" 
           extra="The recurring will happen at 5:00 am (Sydney time) on the specified day."
           rules={[{
-            required: false, message: 'Not a valid future date', validator: async (rule, value) => {
-              if (value && !moment(value).isAfter()) {
+            required: true, message: ' ', validator: async (rule, value) => {
+              if (!value || !moment(value).isValid()) {
                 throw new Error();
               }
             }

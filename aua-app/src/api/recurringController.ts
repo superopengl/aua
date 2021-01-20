@@ -28,7 +28,6 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
   recurring.nameTemplate = `${portfolio.name} ${taskTemplate.name} {{createdDate}}`;
   recurring.portfolioId = portfolioId;
   recurring.taskTemplateId = taskTemplateId;
-  recurring.cron = cron;
   recurring.dueDay = dueDay;
   recurring.startFrom = startFrom ? moment.tz(`${startFrom} ${CRON_EXECUTE_TIME}`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate() : null;
   recurring.every = every;

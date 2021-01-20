@@ -19,7 +19,7 @@ import 'colors';
 import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunAt';
 
 export const CLIENT_TZ = 'Australia/Sydney';
-export const CRON_EXECUTE_TIME = '5:00';
+export const CRON_EXECUTE_TIME = process.env.NODE_ENV === 'dev' ? moment().add(2, 'minute').format('HH:mm') : '5:00';
 const PROD_CRON_PATTERN = CRON_EXECUTE_TIME.replace(/(.*):(.*)/, '0 $2 $1 * * *'); // 5 am every day
 
 let cronJob = null;
@@ -29,7 +29,7 @@ function stopRunningCronJob() {
 }
 
 function getCronPattern() {
-  if(process.env.NODE_ENV === 'dev') {
+  if (process.env.NODE_ENV === 'dev') {
     return '*/10 * * * * *';
   } else {
     return PROD_CRON_PATTERN;
@@ -44,7 +44,8 @@ async function onCronJobExecute() {
     .innerJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
     .innerJoin(q => q.from(Portfolio, 'p'), 'p', 'p.id = x."portfolioId"')
     .innerJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')
-    .where(`(x."nextRunAt" at time zone 'utc' at time zone '${CLIENT_TZ}')::DATE = (now() at time zone '${CLIENT_TZ}')::DATE`)
+    .where(`x."nextRunAt" <= now()`)
+    // .andWhere(`x."nextRunAt"::DATE = now()::DATE`)
     .getMany();
 
   for (const r of list) {
@@ -76,17 +77,17 @@ function trySetTaskDueDateField(task, dueDay) {
   if (!dueDay) return;
   const dueDateField = task.fields.find(x => x.name === 'Due_Date');
   if (!dueDateField) return;
-  dueDateField.value = moment().add(dueDay, 'day').toDate();
+  dueDateField.value = moment().add(dueDay, 'day').format('DD/MM/YYYY');
 }
 
-export async function testRunRecurring(recurringId) {
+export async function testRunRecurring(recurringId: string) {
   const recurring = await getRepository(Recurring).findOne(recurringId);
   assert(recurring, 404);
-  return executeRecurring(recurringId, false);
+  return executeRecurring(recurring, false);
 }
 
 async function executeRecurring(recurring: Recurring, resetNextRunAt: boolean) {
-  const { taskTemplateId, portfolioId, nameTemplate } = recurring;
+  const { taskTemplateId, portfolioId, nameTemplate, dueDay } = recurring;
 
   const taskName = nameTemplate.replace('{{createdDate}}', moment().format('DD MMM YYYY'));
   const task = await generateTaskByTaskTemplateAndPortfolio(
