@@ -18,7 +18,7 @@
       "env": {
         "TS_NODE_IGNORE": "false",
         "NODE_ENV": "dev",
-        "TZ": "utc"
+        "TZ": "Australia/Sydney"
       },
       "runtimeArgs": [
         "--nolazy",
