@@ -114,6 +114,7 @@ interface ISearchTaskQuery {
   size?: number;
   status?: TaskStatus[];
   assignee?: string;
+  dueDateRange?: [string, string];
   orderField?: string;
   orderDirection?: 'ASC' | 'DESC';
 }
@@ -130,7 +131,7 @@ export const searchTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const option: ISearchTaskQuery = { ...defaultSearch, ...req.body };
 
-  const { text, status, page, assignee, orderDirection, orderField } = option;
+  const { text, status, page, assignee, orderDirection, orderField, dueDateRange } = option;
   const size = option.size;
   const skip = (page - 1) * size;
   const { role, id } = (req as any).user;
@@ -174,6 +175,11 @@ export const searchTask = handlerWrapper(async (req, res) => {
   if (text) {
     query = query.andWhere('(x.name ILIKE :text OR x."forWhom" ILIKE :text OR j.name ILIKE :text OR u.email ILIKE :text)', { text: `%${text}%` });
   }
+  if (dueDateRange?.length === 2) {
+    query = query.andWhere(`x."dueDate" >= :start`, { start: moment(dueDateRange[0], 'DD/MM/YYYY').startOf('day').toDate() })
+      .andWhere(`x."dueDate" <= :end`, { end: moment(dueDateRange[1], 'DD/MM/YYYY').endOf('day').toDate() })
+  }
+
   const total = await query.getCount();
   const list = await query
     .orderBy(`"${orderField}"`, orderDirection)

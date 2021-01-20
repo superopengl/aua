@@ -1,5 +1,5 @@
-import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, MessageOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Modal, Select, Space, Table, Tooltip, Typography, Divider } from 'antd';
+import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, CloseOutlined } from '@ant-design/icons';
+import { Button, Input, Layout, Modal, Select, Space, Table, Tooltip, Typography, DatePicker, Row, Col } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import HomeHeader from 'components/HomeHeader';
 import { TaskStatus } from 'components/TaskStatus';
@@ -15,6 +15,7 @@ import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
 import { GlobalContext } from 'contexts/GlobalContext';
 import * as ReactDom from 'react-dom';
+import * as moment from 'moment';
 
 const { Title } = Typography;
 
@@ -27,7 +28,6 @@ const ContainerStyled = styled.div`
   }
 
   .ant-table {
-    margin-top: 20px;
     font-size: 12px !important;
 
     .ant-table-column-sorters {
@@ -43,7 +43,6 @@ const ContainerStyled = styled.div`
   .ant-select-selection-item {
     font-size: 12px !important;
   }
-
 `;
 
 const StyledTitleRow = styled.div`
@@ -58,6 +57,24 @@ const LayoutStyled = styled(Layout)`
   background-color: #ffffff;
   height: 100%;
 `;
+
+const FitlerTable = styled.table`
+tr {
+  td {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  td:first-child {
+    padding-right: 1rem;
+  }
+}
+`;
+
+const TitleLabel = styled(Text)`
+  width: 100px;
+  margin-right: 1rem;
+`
 
 const DEFAULT_QUERY_INFO = {
   text: '',
@@ -303,6 +320,15 @@ const AdminTaskListPage = (props) => {
     loadTaskWithQuery(newQueryInfo);
   }
 
+  const handleDueDateRangeChange = (dates, dateStrings) => {
+    const newQueryInfo = {
+      ...queryInfo,
+      page: 1,
+      dueDateRange: dateStrings && dateStrings[0] && dateStrings[1] ? dateStrings : null
+    }
+    loadTaskWithQuery(newQueryInfo);
+  }
+
   const handleCreateTask = () => {
     props.history.push('/tasks/new');
   }
@@ -327,48 +353,64 @@ const AdminTaskListPage = (props) => {
           <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>Task Management</Title>
           </StyledTitleRow>
-          <Space style={{ width: '100%', justifyContent: 'space-between', margin: '1rem auto 0.5rem' }}>
-            <Input.Search
-              placeholder="Search text"
-              enterButton={<><SearchOutlined /> Search</>}
-              onSearch={value => handleSearch(value)}
-              onPressEnter={e => handleSearch(e.target.value)}
-              onChange={e => handleSearchTextChange(e.target.value)}
-              loading={loading}
-              value={queryInfo?.text}
-              allowClear
-            />
+          <Space style={{width: '100%', justifyContent: 'space-between'}}>
+              <Space>
+                Search
+              <Input.Search
+                  placeholder="Search text"
+                  enterButton={<><SearchOutlined /> Search</>}
+                  onSearch={value => handleSearch(value)}
+                  onPressEnter={e => handleSearch(e.target.value)}
+                  onChange={e => handleSearchTextChange(e.target.value)}
+                  loading={loading}
+                  value={queryInfo?.text}
+                  allowClear
+                />
+              </Space>
+              <Space size="small">
+                <Button onClick={() => clearAllFilters()} icon={<CloseOutlined />}>Reset Filters</Button>
+                <Button onClick={() => loadList()} icon={<SyncOutlined />}>Refresh</Button>
+                <Button onClick={() => handleCreateTask()} type="primary" icon={<PlusOutlined />}>New Task</Button>
+              </Space>
+          </Space>
+          <Space style={{width: '100%'}}>
+              <Space>
+                Status
+            <Select
+                  mode="multiple"
+                  allowClear={false}
+                  style={{ width: 420 }}
+                  placeholder="Status filter"
+                  value={queryInfo?.status || []}
+                  onChange={handleStatusFilter}
+                >
+                  {StatusSelectOptions.map((x, i) => <Select.Option key={i} value={x.value}>
+                    {x.label}
+                  </Select.Option>)}
+                </Select>
+              </Space>
+              <Space>
+                Assignee
+                    <Select
+                  placeholder="Filter assignee"
+                  style={{ width: 130 }}
+                  onChange={handleAssigneeChange}
+                  value={queryInfo?.assignee}
+                >
+                  <Select.Option key={-1} value={null}>{' '}</Select.Option>
+                  {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{myUserId === a.id ? 'Me' : `${a.givenName || 'Unset'} ${a.surname || 'Unset'}`}</Select.Option>)}
+                </Select>
+              </Space>
+              <Space>
+                <Text>Due Date</Text>
+                <DatePicker.RangePicker value={queryInfo.dueDateRange?.map(x => moment(x, 'DD/MM/YYYY'))} onChange={handleDueDateRangeChange} format="DD/MM/YYYY" />
 
-            <Space size="small">
-              <Select
-                mode="multiple"
-                allowClear={false}
-                style={{ width: 420 }}
-                placeholder="Status filter"
-                value={queryInfo?.status || []}
-                onChange={handleStatusFilter}
-              >
-                {StatusSelectOptions.map((x, i) => <Select.Option key={i} value={x.value}>
-                  {x.label}
-                </Select.Option>)}
-              </Select>
-              <Select
-                placeholder="Filter agent"
-                style={{ width: 130 }}
-                onChange={handleAssigneeChange}
-                value={queryInfo?.assignee}
-              >
-                <Select.Option key={-1} value={null}>{' '}</Select.Option>
-                {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{myUserId === a.id ? 'Me' : `${a.givenName || 'Unset'} ${a.surname || 'Unset'}`}</Select.Option>)}
-              </Select>
-              <Button onClick={() => clearAllFilters()}>Reset Filters</Button>
-              <Button onClick={() => loadList()} icon={<SyncOutlined />}></Button>
-              <Button onClick={() => handleCreateTask()} type="primary" icon={<PlusOutlined />}>New Task</Button>
-            </Space>
+              </Space>
           </Space>
           <Table columns={columnDef}
             dataSource={taskList}
             // scroll={{x: 1000}}
+            style={{marginTop: 30}}
             rowKey="id"
             size="small"
             loading={loading}
