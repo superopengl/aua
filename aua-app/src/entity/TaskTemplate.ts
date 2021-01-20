@@ -1,4 +1,4 @@
-import { Column, PrimaryColumn, Entity, Index } from 'typeorm';
+import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class TaskTemplate {
@@ -9,10 +9,10 @@ export class TaskTemplate {
   @Index({ unique: true })
   name: string;
 
-  @Column({ default: () => `now()` })
-  createdAt?: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn()
   lastUpdatedAt: Date;
 
   @Column({type: 'varchar', array: true, default: '{}'})

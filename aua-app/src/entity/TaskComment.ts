@@ -1,4 +1,4 @@
-import { Column, PrimaryGeneratedColumn, Entity, Index } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn } from 'typeorm';
 
 
 @Entity()
@@ -6,8 +6,8 @@ export class TaskComment {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @Column({ default: () => `now()` })
-  createdAt?: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
   @Column('uuid')
   @Index()

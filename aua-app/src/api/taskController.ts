@@ -97,7 +97,6 @@ export const saveTask = handlerWrapper(async (req, res) => {
   task.fields = fields;
   task.docs = docs;
   task.status = status;
-  task.lastUpdatedAt = getNow();
 
   const dueDateFieldValue = fields.find(f => f.name === 'Due_Date')?.value;
   task.dueDate = dueDateFieldValue ? moment(dueDateFieldValue, 'DD/MM/YYYY').toDate() : null;

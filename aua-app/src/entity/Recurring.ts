@@ -1,12 +1,15 @@
-import { Column, PrimaryColumn, Entity, UpdateDateColumn } from 'typeorm';
+import { Column, PrimaryColumn, Entity, UpdateDateColumn, CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class Recurring {
   @PrimaryColumn('uuid')
   id: string;
 
-  @Column({ default: () => `now()` })
-  createdAt?: Date;
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  lastUpdatedAt: Date;
 
   @Column()
   nameTemplate: string;
@@ -37,9 +40,6 @@ export class Recurring {
 
   @Column({nullable: true})
   nextRunAt: Date;
-
-  @UpdateDateColumn()
-  lastUpdatedAt: Date;
 }
 
 

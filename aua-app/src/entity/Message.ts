@@ -1,13 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class Message {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column({ default: () => `now()` })
+  @CreateDateColumn()
   @Index()
-  createdAt?: Date;
+  createdAt: Date;
 
   @Column('uuid')
   @Index()

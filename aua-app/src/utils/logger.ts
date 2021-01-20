@@ -26,7 +26,6 @@ export async function logError(err, req, res, ...args) {
       level: 'error',
       createdBy: req.user ? JSON.stringify(req.user) : undefined,
       req: serializeReq(req),
-      res: serializeRes(res),
       data: JSON.stringify(data)
     };
     const repo = getRepository(SysLog);

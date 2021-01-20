@@ -66,7 +66,6 @@ export const generateTaskByTaskTemplateAndPortfolio = async (taskTemplateId, por
   task.portfolioId = portfolioId;
   task.fields = fields;
   task.docs = mapDocTemplatesToGenDocs(docTemplates);
-  task.lastUpdatedAt = getNow();
   task.status = TaskStatus.TODO;
 
   return task;

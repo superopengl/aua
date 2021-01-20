@@ -1,4 +1,4 @@
-import { Column, PrimaryGeneratedColumn, Entity, Index } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { TaskStatus } from '../types/TaskStatus';
 import { TaskDoc } from '../types/TaskDoc';
 
@@ -7,10 +7,10 @@ export class Task {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column({ default: () => `now()` })
-  createdAt?: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn()
   lastUpdatedAt: Date;
 
   @Column()

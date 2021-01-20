@@ -1,4 +1,4 @@
-import { Column, PrimaryColumn, Entity, Index } from 'typeorm';
+import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 
 @Entity()
@@ -13,11 +13,10 @@ export class DocTemplate {
   @Column({default: ''})
   description: string;
 
-  @Column({ default: () => `now()` })
-  createdAt?: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Column()
-  @Index()
+  @UpdateDateColumn()
   lastUpdatedAt: Date;
 
   @Column({ type: 'text' })

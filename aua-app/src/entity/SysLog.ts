@@ -1,11 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class SysLog {
     @PrimaryGeneratedColumn()
     id?: number;
 
-    @Column({ default: () => `now()` })
+    @CreateDateColumn()
     createdAt?: Date;
 
     @Column({ default: 'system' })
@@ -19,9 +19,6 @@ export class SysLog {
 
     @Column({ type: 'json', nullable: true })
     req: any;
-
-    @Column({ type: 'json', nullable: true })
-    res: any;
 
     @Column({ type: 'json', nullable: true })
     data: any;

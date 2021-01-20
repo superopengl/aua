@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { TaskStatus } from '../types/TaskStatus';
 import { TaskDoc } from '../types/TaskDoc';
 
@@ -7,8 +7,8 @@ export class TaskHistory {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: () => `now()` })
-  historyCreatedAt?: Date;
+  @CreateDateColumn()
+  historyCreatedAt: Date;
 
   @Column('uuid')
   taskId: string;

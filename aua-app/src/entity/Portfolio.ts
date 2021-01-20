@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, Index, ManyToMany, JoinTable, Unique } from 'typeorm';
+import { Entity, Column, PrimaryColumn, Index, ManyToMany, JoinTable, Unique, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 // @Unique('user_portfolio_name_unique', ['userId', 'name'])
@@ -10,10 +10,10 @@ export class Portfolio {
   @Index()
   userId: string;
 
-  @Column({ default: () => `now()` })
-  createdAt?: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn()
   lastUpdatedAt: Date;
 
   @Column()

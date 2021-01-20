@@ -16,7 +16,6 @@ export const saveBlog = handlerWrapper(async (req, res) => {
   blog.title = title;
   blog.md = md;
   blog.files = files;
-  blog.lastUpdatedAt = getNow();
 
   await repo.save(blog);
 

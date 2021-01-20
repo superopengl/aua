@@ -46,7 +46,6 @@ async function onCronJobExecute() {
     .innerJoin(q => q.from(Portfolio, 'p'), 'p', 'p.id = x."portfolioId"')
     .innerJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')
     .where(`x."nextRunAt" <= now()`)
-    // .andWhere(`x."nextRunAt"::DATE = now()::DATE`)
     .getMany();
 
   for (const r of list) {

@@ -21,7 +21,6 @@ export const savePortfolio = handlerWrapper(async (req, res) => {
   portfolio.name = guessDisplayNameFromFields(fields);
   portfolio.fields = fields;
   portfolio.type = type;
-  portfolio.lastUpdatedAt = getNow();
 
   const repo = getRepository(Portfolio);
   await repo.save(portfolio);

@@ -19,7 +19,6 @@ export const saveTaskTemplate = handlerWrapper(async (req, res) => {
   taskTemplate.name = name;
   taskTemplate.docTemplateIds = docTemplateIds;
   taskTemplate.fields = fields.filter(f => f.name?.trim() && f.type?.trim());
-  taskTemplate.lastUpdatedAt = getNow();
 
   const repo = getRepository(TaskTemplate);
   await repo.save(taskTemplate);

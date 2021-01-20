@@ -30,7 +30,6 @@ export const saveDocTemplate = handlerWrapper(async (req, res) => {
   docTemplate.description = description;
   docTemplate.md = md;
   docTemplate.variables = extractVariables(md);
-  docTemplate.lastUpdatedAt = getNow();
 
   const repo = getRepository(DocTemplate);
   await repo.save(docTemplate);

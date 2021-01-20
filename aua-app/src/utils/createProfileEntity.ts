@@ -6,7 +6,6 @@ export function createProfileEntity(userId: string, payload: any): Portfolio {
   profile.id = userId;
   profile.name = payload.name;
   profile.fields = payload.fields;
-  profile.lastUpdatedAt = getNow();
 
   return profile;
 }
