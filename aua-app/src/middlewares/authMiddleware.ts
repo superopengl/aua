@@ -23,9 +23,9 @@ export const authMiddleware = async (req, res, next) => {
     } else {
       // Guest user (hasn't logged in)
     }
-    next();
-  } catch (err) {
-    next(err);
+  } catch {
+    clearJwtCookie(res);
   }
+  next();
 };
 
