@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Modal, Select, Space, Table, Tooltip, Typography, DatePicker, Row, Col } from 'antd';
+import { Button, Input, Layout, Modal, Select, Space, Table, Tooltip, Typography, DatePicker, Pagination, Col } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import HomeHeader from 'components/HomeHeader';
 import { TaskStatus } from 'components/TaskStatus';
@@ -58,23 +58,6 @@ const LayoutStyled = styled(Layout)`
   height: 100%;
 `;
 
-const FitlerTable = styled.table`
-tr {
-  td {
-    padding-top: 4px;
-    padding-bottom: 4px;
-  }
-
-  td:first-child {
-    padding-right: 1rem;
-  }
-}
-`;
-
-const TitleLabel = styled(Text)`
-  width: 100px;
-  margin-right: 1rem;
-`
 
 const DEFAULT_QUERY_INFO = {
   text: '',
@@ -225,8 +208,6 @@ const AdminTaskListPage = (props) => {
       newQueryInfo.orderDirection = sorter.order === 'ascend' ? 'ASC' : 'DESC';
     }
 
-    console.log('queryInfo', newQueryInfo);
-
     await loadTaskWithQuery(newQueryInfo);
   }
 
@@ -329,6 +310,15 @@ const AdminTaskListPage = (props) => {
     loadTaskWithQuery(newQueryInfo);
   }
 
+  const handlePaginationChange = async (page, size) => {
+    const newQueryInfo = {
+      ...queryInfo,
+      page,
+      size
+    }
+    await loadTaskWithQuery(newQueryInfo);
+  }
+
   const handleCreateTask = () => {
     props.history.push('/tasks/new');
   }
@@ -410,11 +400,11 @@ const AdminTaskListPage = (props) => {
           <Table columns={columnDef}
             dataSource={taskList}
             // scroll={{x: 1000}}
-            style={{marginTop: 30}}
+            // style={{marginTop: 30}}
             rowKey="id"
             size="small"
             loading={loading}
-            pagination={queryInfo}
+            pagination={false}
             onChange={handleTableChange}
             rowClassName={(record) => record.lastUnreadMessageAt ? 'unread' : ''}
             onRow={(record) => ({
@@ -423,6 +413,10 @@ const AdminTaskListPage = (props) => {
               }
             })}
           ></Table>
+          <Space style={{width: '100%', justifyContent: 'flex-end'}}>
+            <Pagination size="small" onChange={handlePaginationChange} 
+            total={queryInfo.total} showSizeChanger={true} pageSize={queryInfo.size}/>
+          </Space>
         </Space>
 
       </ContainerStyled>
