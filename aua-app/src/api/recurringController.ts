@@ -64,7 +64,6 @@ export const listRecurring = handlerWrapper(async (req, res) => {
       'p.name as "portfolioName"',
       'x."lastRunAt" as "lastRunAt"',
       'x."nextRunAt" as "nextRunAt"',
-      'x.cron as cron',
     ])
     .execute();
 

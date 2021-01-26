@@ -21,9 +21,6 @@ export class Recurring {
   portfolioId: string;
 
   @Column({nullable: true})
-  cron: string;
-
-  @Column({nullable: true})
   dueDay: number;
 
   @Column({nullable: true})

@@ -100,7 +100,7 @@ const RecurringListPage = (props) => {
       title: 'Recurring Pattern',
       render: (text, record) => {
         const deprecated = isRecurringDeprecated(record);
-        const { cron, startFrom, every, period, lastRunAt, nextRunAt } = record;
+        const { startFrom, every, period, lastRunAt, nextRunAt } = record;
         return <StylePatternTable>
           <tbody>
             <tr>
