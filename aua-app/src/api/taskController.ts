@@ -113,6 +113,8 @@ interface ISearchTaskQuery {
   size?: number;
   status?: TaskStatus[];
   assignee?: string;
+  taskTemplateId?: string;
+  portfolioId?: string;
   dueDateRange?: [string, string];
   orderField?: string;
   orderDirection?: 'ASC' | 'DESC';
@@ -130,7 +132,7 @@ export const searchTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const option: ISearchTaskQuery = { ...defaultSearch, ...req.body };
 
-  const { text, status, page, assignee, orderDirection, orderField, dueDateRange } = option;
+  const { text, status, page, assignee, orderDirection, orderField, dueDateRange, taskTemplateId, portfolioId } = option;
   const size = option.size;
   const skip = (page - 1) * size;
   const { role, id } = (req as any).user;
@@ -147,6 +149,12 @@ export const searchTask = handlerWrapper(async (req, res) => {
   }
   if (assignee) {
     query = query.andWhere('x."agentId" = :assignee', { assignee });
+  }
+  if (taskTemplateId) {
+    query = query.andWhere(`x."taskTemplateId" = :taskTemplateId`, {taskTemplateId});
+  }
+  if (portfolioId) {
+    query = query.andWhere(`x."portfolioId" = :portfolioId`, {portfolioId});
   }
   query = query.innerJoin(q => q.from(TaskTemplate, 'j').select('*'), 'j', 'j.id = x."taskTemplateId"')
     .innerJoin(q => q.from(User, 'u').select('*'), 'u', 'x."userId" = u.id')

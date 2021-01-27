@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import * as moment from 'moment';
 import { DateInput } from 'components/DateInput';
 import PortfolioSelect from 'components/PortfolioSelect';
+import TaskTemplateSelect from 'components/TaskTemplateSelect';
 
 const { Text, Paragraph } = Typography;
 
@@ -64,11 +65,7 @@ const RecurringForm = (props) => {
       <Space direction="vertical" size="small">
         <Paragraph type="secondary">The recurring will happen at 5:00 am (Sydney time) on the specified day.</Paragraph>
         <Form.Item label="Task Template" name="taskTemplateId" rules={[{ required: true, message: ' ' }]}>
-          <Select allowClear>
-            {taskTemplateList.map((t, i) => (<Select.Option key={i} value={t.id}>
-              {t.name}
-            </Select.Option>))}
-          </Select>
+          <TaskTemplateSelect />
         </Form.Item>
         <Form.Item label="Client Portfolio" name="portfolioId" rules={[{ required: true, message: ' ' }]}>
           <PortfolioSelect />

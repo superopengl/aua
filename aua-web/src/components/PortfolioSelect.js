@@ -17,7 +17,7 @@ const StyledPortfolioSelect = styled(Select)`
 `;
 
 const PortfolioSelect = (props) => {
-  const { value, onChange } = props;
+  const { value, onChange, ...other } = props;
 
   const [, setLoading] = React.useState(true);
   const [portfolioList, setPortfolioList] = React.useState([]);
@@ -35,7 +35,7 @@ const PortfolioSelect = (props) => {
   }, []);
 
   return (
-    <StyledPortfolioSelect allowClear value={value} onChange={onChange}>
+    <StyledPortfolioSelect allowClear value={value} onChange={onChange} {...other}>
       {portfolioList.map((p, i) => (<Select.Option key={i} value={p.id}>
         <Space>
           <PortfolioAvatar value={p.name} id={p.id} size={40} />

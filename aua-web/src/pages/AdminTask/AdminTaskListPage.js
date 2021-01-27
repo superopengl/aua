@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Modal, Select, Space, Table, Tooltip, Typography, DatePicker, Pagination, Col } from 'antd';
+import { Button, Input, Layout, Modal, Select, Space, Row, Table, Tooltip, Typography, DatePicker, Pagination, Col } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import HomeHeader from 'components/HomeHeader';
 import { TaskStatus } from 'components/TaskStatus';
@@ -16,6 +16,8 @@ import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
 import { GlobalContext } from 'contexts/GlobalContext';
 import * as ReactDom from 'react-dom';
 import * as moment from 'moment';
+import TaskTemplateSelect from 'components/TaskTemplateSelect';
+import PortfolioSelect from 'components/PortfolioSelect';
 
 const { Title } = Typography;
 
@@ -58,6 +60,9 @@ const LayoutStyled = styled(Layout)`
   height: 100%;
 `;
 
+const Label = styled.div`
+  // width: 100px;
+`;
 
 const DEFAULT_QUERY_INFO = {
   text: '',
@@ -319,6 +324,24 @@ const AdminTaskListPage = (props) => {
     await loadTaskWithQuery(newQueryInfo);
   }
 
+  const handleTaskTemplateIdChange = async (taskTemplateId) => {
+    const newQueryInfo = {
+      ...queryInfo,
+      taskTemplateId,
+      page: 1,
+    }
+    await loadTaskWithQuery(newQueryInfo);
+  }
+
+  const handlePortfolioIdChange = async (portfolioId) => {
+    const newQueryInfo = {
+      ...queryInfo,
+      portfolioId,
+      page: 1,
+    }
+    await loadTaskWithQuery(newQueryInfo);
+  }
+
   const handleCreateTask = () => {
     props.history.push('/tasks/new');
   }
@@ -343,10 +366,13 @@ const AdminTaskListPage = (props) => {
           <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>Task Management</Title>
           </StyledTitleRow>
-          <Space style={{width: '100%', justifyContent: 'space-between'}}>
+
+          <Row gutter={[20, 20]}>
+            <Col>
               <Space>
-                Search
-              <Input.Search
+                <Label>Search</Label>
+                <Input.Search
+                  style={{ width: 420 }}
                   placeholder="Search text"
                   enterButton={<><SearchOutlined /> Search</>}
                   onSearch={value => handleSearch(value)}
@@ -357,15 +383,10 @@ const AdminTaskListPage = (props) => {
                   allowClear
                 />
               </Space>
-              <Space size="small">
-                <Button onClick={() => clearAllFilters()} icon={<CloseOutlined />}>Reset Filters</Button>
-                <Button onClick={() => loadList()} icon={<SyncOutlined />}>Refresh</Button>
-                <Button onClick={() => handleCreateTask()} type="primary" icon={<PlusOutlined />}>New Task</Button>
-              </Space>
-          </Space>
-          <Space style={{width: '100%'}}>
+            </Col>
+            <Col>
               <Space>
-                Status
+                <Label>Status</Label>
                 <Select
                   mode="multiple"
                   allowClear={false}
@@ -379,11 +400,30 @@ const AdminTaskListPage = (props) => {
                   </Select.Option>)}
                 </Select>
               </Space>
+            </Col>
+            <Col>
               <Space>
-                Assignee
-                    <Select
+                <Label>Due Date</Label>
+                <DatePicker.RangePicker
+                  value={queryInfo.dueDateRange?.map(x => moment(x, 'DD/MM/YYYY'))} onChange={handleDueDateRangeChange} format="DD/MM/YYYY" />
+              </Space>
+            </Col>
+            <Col>
+              <Space>
+                <Label>Task Template</Label>
+                <TaskTemplateSelect
+                  style={{ width: 280 }}
+
+                  value={queryInfo?.taskTemplateId} onChange={handleTaskTemplateIdChange} />
+              </Space>
+            </Col>
+            <Col>
+              <Space>
+                <Label>Assignee</Label>
+
+                <Select
                   placeholder="Filter assignee"
-                  style={{ width: 130 }}
+                  style={{ width: 140 }}
                   onChange={handleAssigneeChange}
                   value={queryInfo?.assignee}
                 >
@@ -391,12 +431,26 @@ const AdminTaskListPage = (props) => {
                   {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{myUserId === a.id ? 'Me' : `${a.givenName || 'Unset'} ${a.surname || 'Unset'}`}</Select.Option>)}
                 </Select>
               </Space>
+            </Col>
+            <Col>
               <Space>
-                <Text>Due Date</Text>
-                <DatePicker.RangePicker value={queryInfo.dueDateRange?.map(x => moment(x, 'DD/MM/YYYY'))} onChange={handleDueDateRangeChange} format="DD/MM/YYYY" />
-
+                <Label style={{position: 'relative', top: -8}}>Portfolio</Label>
+                <PortfolioSelect
+                  style={{ width: 280 }}
+                  value={queryInfo?.portfolioId} onChange={handlePortfolioIdChange} />
               </Space>
-          </Space>
+            </Col>
+            <Col>
+              <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+                <Button danger ghost onClick={() => clearAllFilters()} icon={<CloseOutlined />}>Reset Filters</Button>
+                <Button onClick={() => loadList()} icon={<SyncOutlined />}>Refresh</Button>
+                <Button onClick={() => handleCreateTask()} type="primary" icon={<PlusOutlined />}>New Task</Button>
+              </Space>
+            </Col>
+          </Row>
+
+
+
           <Table columns={columnDef}
             dataSource={taskList}
             // scroll={{x: 1000}}
@@ -413,9 +467,9 @@ const AdminTaskListPage = (props) => {
               }
             })}
           ></Table>
-          <Space style={{width: '100%', justifyContent: 'flex-end'}}>
-            <Pagination size="small" onChange={handlePaginationChange} 
-            total={queryInfo.total} showSizeChanger={true} pageSize={queryInfo.size}/>
+          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+            <Pagination size="small" onChange={handlePaginationChange}
+              total={queryInfo.total} showSizeChanger={true} pageSize={queryInfo.size} />
           </Space>
         </Space>
 

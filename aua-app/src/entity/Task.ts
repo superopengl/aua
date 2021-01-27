@@ -11,6 +11,7 @@ export class Task {
   createdAt: Date;
 
   @UpdateDateColumn()
+  @Index()
   lastUpdatedAt: Date;
 
   @Column()
@@ -20,15 +21,19 @@ export class Task {
   forWhom: string;
 
   @Column({ default: TaskStatus.TODO })
+  @Index()
   status: TaskStatus;
 
   @Column('uuid')
+  @Index()
   taskTemplateId: string;
 
   @Column('uuid')
+  @Index()
   portfolioId: string;
 
   @Column('uuid', { nullable: true })
+  @Index()
   agentId?: string;
 
   @Column('uuid')
