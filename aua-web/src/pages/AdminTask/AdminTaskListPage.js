@@ -367,24 +367,28 @@ const AdminTaskListPage = (props) => {
           <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>Task Management</Title>
           </StyledTitleRow>
-
-          <Row gutter={[20, 20]}>
-            <Col>
-              <Space>
-                <Label>Search</Label>
-                <Input.Search
-                  style={{ width: 420 }}
-                  placeholder="Search text"
-                  enterButton={<><SearchOutlined /> Search</>}
-                  onSearch={value => handleSearch(value)}
-                  onPressEnter={e => handleSearch(e.target.value)}
-                  onChange={e => handleSearchTextChange(e.target.value)}
-                  loading={loading}
-                  value={queryInfo?.text}
-                  allowClear
-                />
-              </Space>
-            </Col>
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Space>
+              <Label>Search</Label>
+              <Input.Search
+                style={{ width: 420 }}
+                placeholder="Search text"
+                enterButton={<><SearchOutlined /> Search</>}
+                onSearch={value => handleSearch(value)}
+                onPressEnter={e => handleSearch(e.target.value)}
+                onChange={e => handleSearchTextChange(e.target.value)}
+                loading={loading}
+                value={queryInfo?.text}
+                allowClear
+              />
+            </Space>
+            <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+              <Button danger ghost onClick={() => clearAllFilters()} icon={<CloseOutlined />}>Reset Filters</Button>
+              <Button onClick={() => loadList()} icon={<SyncOutlined />}>Refresh</Button>
+              <Button onClick={() => handleCreateTask()} type="primary" icon={<PlusOutlined />}>New Task</Button>
+            </Space>
+          </Space>
+          <Row gutter={[10, 10]}>
             <Col>
               <Space>
                 <Label>Status</Label>
@@ -435,7 +439,7 @@ const AdminTaskListPage = (props) => {
             </Col>
             <Col>
               <Space>
-                <Label style={{position: 'relative', top: -8}}>Portfolio</Label>
+                <Label style={{ position: 'relative', top: -8 }}>Portfolio</Label>
                 <PortfolioSelect
                   style={{ width: 280 }}
                   value={queryInfo?.portfolioId} onChange={handlePortfolioIdChange} />
@@ -443,17 +447,10 @@ const AdminTaskListPage = (props) => {
             </Col>
             <Col>
               <Space>
-                <Label style={{position: 'relative', top: -8}}>Client</Label>
+                <Label style={{ position: 'relative', top: -8 }}>Client</Label>
                 <ClientSelect
                   style={{ width: 280 }}
                   value={queryInfo?.clientId} onChange={handleClientIdChange} />
-              </Space>
-            </Col>
-            <Col>
-              <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-                <Button danger ghost onClick={() => clearAllFilters()} icon={<CloseOutlined />}>Reset Filters</Button>
-                <Button onClick={() => loadList()} icon={<SyncOutlined />}>Refresh</Button>
-                <Button onClick={() => handleCreateTask()} type="primary" icon={<PlusOutlined />}>New Task</Button>
               </Space>
             </Col>
           </Row>
