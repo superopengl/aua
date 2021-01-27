@@ -10,6 +10,7 @@ import { getRecurring, saveRecurring } from 'services/recurringService';
 import styled from 'styled-components';
 import * as moment from 'moment';
 import { DateInput } from 'components/DateInput';
+import PortfolioSelect from 'components/PortfolioSelect';
 
 const { Text, Paragraph } = Typography;
 
@@ -70,17 +71,7 @@ const RecurringForm = (props) => {
           </Select>
         </Form.Item>
         <Form.Item label="Client Portfolio" name="portfolioId" rules={[{ required: true, message: ' ' }]}>
-          <StyledPortfolioSelect allowClear>
-            {portfolioList.map((p, i) => (<Select.Option key={i} value={p.id}>
-              <Space>
-                <PortfolioAvatar value={p.name} id={p.id} size={40} />
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ margin: 0, lineHeight: '1rem' }}>{p.name}</div>
-                  <Text style={{ margin: 0, lineHeight: '0.8rem' }} type="secondary"><small>{p.email}</small></Text>
-                </div>
-              </Space>
-            </Select.Option>))}
-          </StyledPortfolioSelect>
+          <PortfolioSelect />
         </Form.Item>
         <Form.Item
           label="Start On (First Run)" name="startFrom" 
