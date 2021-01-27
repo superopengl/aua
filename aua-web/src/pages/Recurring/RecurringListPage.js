@@ -57,6 +57,10 @@ const StylePatternTable = styled.table`
 td.label {
   width: 70px;
 }
+
+td {
+  padding: 0;
+}
 `;
 
 const RecurringListPage = (props) => {
@@ -97,7 +101,7 @@ const RecurringListPage = (props) => {
       ellipsis: false
     },
     {
-      title: 'Recurring Pattern',
+      title: 'Recurring Setup',
       render: (text, record) => {
         const deprecated = isRecurringDeprecated(record);
         const { startFrom, every, period, lastRunAt, nextRunAt } = record;
