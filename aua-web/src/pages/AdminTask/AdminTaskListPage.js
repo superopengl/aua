@@ -186,7 +186,7 @@ const AdminTaskListPage = (props) => {
           <Tooltip placement="bottom" title="Proceed task">
             <Link to={`/tasks/${record.id}/proceed`}><Button type="link" icon={<EditOutlined />}></Button></Link>
           </Tooltip>
-          <Tooltip placement="bottom" title="Delete task">
+          <Tooltip placement="bottom" title="Archive task">
             <Button type="link" danger onClick={e => handleDelete(e, record)} icon={<DeleteOutlined />}></Button>
           </Tooltip>
         </Space>
