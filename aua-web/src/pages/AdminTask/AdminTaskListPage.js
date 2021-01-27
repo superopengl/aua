@@ -32,15 +32,6 @@ const ContainerStyled = styled.div`
 
   .ant-table {
     font-size: 12px !important;
-
-    .ant-table-column-sorters {
-      padding: 2px !important;
-    }
-
-    .ant-table-cell {
-      // vertical-align: top;
-      padding: 2px !important;
-    }
   }
 
   .ant-select-selection-item {
