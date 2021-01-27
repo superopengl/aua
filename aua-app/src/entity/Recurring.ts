@@ -1,4 +1,4 @@
-import { Column, PrimaryColumn, Entity, UpdateDateColumn, CreateDateColumn } from 'typeorm';
+import { Column, PrimaryColumn, Entity, UpdateDateColumn, CreateDateColumn, Index } from 'typeorm';
 
 @Entity()
 export class Recurring {
@@ -9,15 +9,18 @@ export class Recurring {
   createdAt: Date;
 
   @UpdateDateColumn()
+  @Index()
   lastUpdatedAt: Date;
 
   @Column()
   nameTemplate: string;
 
   @Column('uuid')
+  @Index()
   taskTemplateId: string;
 
   @Column('uuid')
+  @Index()
   portfolioId: string;
 
   @Column({nullable: true})

@@ -366,7 +366,7 @@ const AdminTaskListPage = (props) => {
           <Space style={{width: '100%'}}>
               <Space>
                 Status
-            <Select
+                <Select
                   mode="multiple"
                   allowClear={false}
                   style={{ width: 420 }}
