@@ -12,6 +12,10 @@ export async function listAgents() {
   return httpGet(`user/agent`);
 }
 
+export async function listClients() {
+  return httpGet(`user/client`);
+}
+
 export async function deleteUser(id) {
   return httpDelete(`user/${id}`);
 }

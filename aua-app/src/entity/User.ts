@@ -21,12 +21,15 @@ export class User {
   email!: string;
 
   @Column({ nullable: true })
+  @Index()
   givenName: string;
 
   @Column({ nullable: true })
+  @Index()
   surname: string;
 
   @Column({ nullable: true })
+  @Index()
   phone: string;
 
   @Column({ default: 'local' })

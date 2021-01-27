@@ -115,6 +115,7 @@ interface ISearchTaskQuery {
   assignee?: string;
   taskTemplateId?: string;
   portfolioId?: string;
+  clientId?: string;
   dueDateRange?: [string, string];
   orderField?: string;
   orderDirection?: 'ASC' | 'DESC';
@@ -132,7 +133,7 @@ export const searchTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const option: ISearchTaskQuery = { ...defaultSearch, ...req.body };
 
-  const { text, status, page, assignee, orderDirection, orderField, dueDateRange, taskTemplateId, portfolioId } = option;
+  const { text, status, page, assignee, orderDirection, orderField, dueDateRange, taskTemplateId, portfolioId, clientId } = option;
   const size = option.size;
   const skip = (page - 1) * size;
   const { role, id } = (req as any).user;
@@ -151,10 +152,13 @@ export const searchTask = handlerWrapper(async (req, res) => {
     query = query.andWhere('x."agentId" = :assignee', { assignee });
   }
   if (taskTemplateId) {
-    query = query.andWhere(`x."taskTemplateId" = :taskTemplateId`, {taskTemplateId});
+    query = query.andWhere(`x."taskTemplateId" = :taskTemplateId`, { taskTemplateId });
   }
   if (portfolioId) {
-    query = query.andWhere(`x."portfolioId" = :portfolioId`, {portfolioId});
+    query = query.andWhere(`x."portfolioId" = :portfolioId`, { portfolioId });
+  }
+  if (clientId) {
+    query = query.andWhere(`x."userId" = :clientId`, { clientId });
   }
   query = query.innerJoin(q => q.from(TaskTemplate, 'j').select('*'), 'j', 'j.id = x."taskTemplateId"')
     .innerJoin(q => q.from(User, 'u').select('*'), 'u', 'x."userId" = u.id')

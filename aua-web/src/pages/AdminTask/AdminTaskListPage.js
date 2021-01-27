@@ -18,6 +18,7 @@ import * as ReactDom from 'react-dom';
 import * as moment from 'moment';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import PortfolioSelect from 'components/PortfolioSelect';
+import ClientSelect from 'components/ClientSelect';
 
 const { Title } = Typography;
 
@@ -342,6 +343,15 @@ const AdminTaskListPage = (props) => {
     await loadTaskWithQuery(newQueryInfo);
   }
 
+  const handleClientIdChange = async (clientId) => {
+    const newQueryInfo = {
+      ...queryInfo,
+      clientId,
+      page: 1,
+    }
+    await loadTaskWithQuery(newQueryInfo);
+  }
+
   const handleCreateTask = () => {
     props.history.push('/tasks/new');
   }
@@ -438,6 +448,14 @@ const AdminTaskListPage = (props) => {
                 <PortfolioSelect
                   style={{ width: 280 }}
                   value={queryInfo?.portfolioId} onChange={handlePortfolioIdChange} />
+              </Space>
+            </Col>
+            <Col>
+              <Space>
+                <Label style={{position: 'relative', top: -8}}>Client</Label>
+                <ClientSelect
+                  style={{ width: 280 }}
+                  value={queryInfo?.clientId} onChange={handleClientIdChange} />
               </Space>
             </Col>
             <Col>

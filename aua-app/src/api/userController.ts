@@ -84,6 +84,25 @@ export const listAllUsers = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
+export const listClients = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+
+  const list = await getRepository(User)
+    .createQueryBuilder()
+    .where(`role = 'client'`)
+    .select([
+      `id`,
+      `email`,
+      `"givenName"`,
+      `surname`,
+    ])
+    .orderBy('"givenName"', 'ASC')
+    .addOrderBy('surname', 'ASC')
+    .addOrderBy('email', 'ASC')
+    .execute();
+
+  res.json(list);
+});
 
 export const listAgents = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
