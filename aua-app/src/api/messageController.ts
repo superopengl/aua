@@ -7,7 +7,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { getNow } from '../utils/getNow';
 
 async function listMessageForClient(clientId, pagenation, unreadOnly) {
-   const query =  getManager()
+  const query = getManager()
     .createQueryBuilder()
     .select('*')
     .from(q => q.from(Message, 'x')
@@ -16,7 +16,7 @@ async function listMessageForClient(clientId, pagenation, unreadOnly) {
       .orderBy('"taskId"')
       .addOrderBy('"createdAt"', 'DESC')
       .distinctOn(['"taskId"'])
-    , 'x')
+      , 'x')
     .innerJoin(q => q.from(Task, 'l').select('*'), 'l', `l.id = x."taskId"`)
     .offset(pagenation.skip)
     .limit(pagenation.limit)
@@ -36,29 +36,29 @@ async function listMessageForClient(clientId, pagenation, unreadOnly) {
 }
 
 async function listMessageForAgent(agentId, pagenation, unreadOnly) {
-  const query =  getManager()
-  .createQueryBuilder()
-  .select('*')
-  .from(q => q.from(Message, 'x')
-    .where(`"agentUserId" = :id`, { id: agentId })
-    .andWhere(unreadOnly ? `"readAt" IS NULL` : '1 = 1')
-    .orderBy('"taskId"')
-    .addOrderBy('"createdAt"', 'DESC')
-    .distinctOn(['"taskId"'])
-  , 'x')
-  .innerJoin(q => q.from(Task, 'l').select('*'), 'l', `l.id = x."taskId"`)
-  .offset(pagenation.skip)
-  .limit(pagenation.limit)
-  .select([
-    'x.id as id',
-    'x."taskId" as "taskId"',
-    'x."createdAt" as "createdAt"',
-    'l.id as "taskId"',
-    'l."forWhom" as "forWhom"',
-    'l.name as name',
-    'content',
-    '"readAt"'
-  ]);
+  const query = getManager()
+    .createQueryBuilder()
+    .select('*')
+    .from(q => q.from(Message, 'x')
+      .where(`"agentUserId" = :id`, { id: agentId })
+      .andWhere(unreadOnly ? `"readAt" IS NULL` : '1 = 1')
+      .orderBy('"taskId"')
+      .addOrderBy('"createdAt"', 'DESC')
+      .distinctOn(['"taskId"'])
+      , 'x')
+    .innerJoin(q => q.from(Task, 'l').select('*'), 'l', `l.id = x."taskId"`)
+    .offset(pagenation.skip)
+    .limit(pagenation.limit)
+    .select([
+      'x.id as id',
+      'x."taskId" as "taskId"',
+      'x."createdAt" as "createdAt"',
+      'l.id as "taskId"',
+      'l."forWhom" as "forWhom"',
+      'l.name as name',
+      'content',
+      '"readAt"'
+    ]);
   const list = await query.execute();
   return list;
 }
@@ -72,7 +72,7 @@ async function listMessageForAdmin(pagenation, unreadOnly) {
       .orderBy('"taskId"')
       .addOrderBy('"createdAt"', 'DESC')
       .distinctOn(['"taskId"'])
-    , 'x')
+      , 'x')
     .innerJoin(q => q.from(Task, 'l').select('*'), 'l', `l.id = x."taskId"`)
     .offset(pagenation.skip)
     .limit(pagenation.limit)
@@ -107,8 +107,8 @@ export const listMessage = handlerWrapper(async (req, res) => {
       list = await listMessageForClient(id, pagenation, unreadOnly);
       break;
     case 'agent':
-      // list = await listMessageForAgent(id, pagenation, unreadOnly);
-      // break;
+    // list = await listMessageForAgent(id, pagenation, unreadOnly);
+    // break;
     case 'admin':
       list = await listMessageForAdmin(pagenation, unreadOnly);
       break;
@@ -156,16 +156,22 @@ export const getMessage = handlerWrapper(async (req, res) => {
 
 export const getMessageUnreadCount = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
-  const repo = getRepository(Message);
   const { user: { role, id } } = req as any;
-  const query: any = {
-    readAt: IsNull()
-  };
-  if (role === 'client') {
-    query.clientUserId = id;
-  }
 
-  const count = await repo.count(query);
+  const info = await getManager()
+    .createQueryBuilder()
+    .from(q => q.from(Message, 'x')
+      .where(`"readAt" IS NULL`)
+      .andWhere(role === 'client' ? `x."clientUserId" = :id` : '1=1', { id })
+      .orderBy('"taskId"')
+      .addOrderBy('"createdAt"', 'DESC')
+      .distinctOn(['"taskId"'])
+      , 'x')
+    .innerJoin(q => q.from(Task, 'l').select('*'), 'l', `l.id = x."taskId"`)
+    .select('COUNT(*) as count')
+    .execute();
+
+  const count = +info[0]?.count ?? 0;
 
   res.json(count);
 });
