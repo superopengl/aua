@@ -101,17 +101,24 @@ const RecurringListPage = (props) => {
       ellipsis: false
     },
     {
-      title: 'Recurring Setup',
+      title: 'Due Day',
+      dataIndex: 'dueDay',
+      render: (text) => text,
+    },
+    {
+      title: 'Frequency',
+      render: (text, record) => {
+        const { every, period } = record;
+        return <Text>{every} {period}{every === 1 ? null : 's'}</Text>;
+      }
+    },
+    {
+      title: 'Schedule',
       render: (text, record) => {
         const deprecated = isRecurringDeprecated(record);
         const { startFrom, every, period, lastRunAt, nextRunAt } = record;
         return <StylePatternTable>
           <tbody>
-            <tr>
-              <td colSpan={2}>
-                Every {every} {period}{every === 1 ? null : 's'}
-              </td>
-            </tr>
             {startFrom && <tr>
               <td className="label">
                 <small>Start From</small>
@@ -144,11 +151,6 @@ const RecurringListPage = (props) => {
       title: 'Updated At',
       dataIndex: 'lastUpdatedAt',
       render: (value) => <TimeAgo value={value} />
-    },
-    {
-      title: 'Due Day',
-      dataIndex: 'dueDay',
-      render: (text) => text,
     },
     {
       // title: 'Action',
