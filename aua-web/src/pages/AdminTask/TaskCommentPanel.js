@@ -100,7 +100,7 @@ const TaskCommentPanel = (props) => {
         <List.Item>
           <List.Item.Meta
             // avatar={<PortfolioAvatar id={item.senderId} value={getAvatarValue(item)} size={30} />}
-            title={<Space><Text strong>{getAvatarValue(item)}</Text><TimeAgo value={item.createdAt} accurate={false} /></Space>}
+            title={<Space><Text strong>{getAvatarValue(item)}</Text><TimeAgo value={item.createdAt} accurate={true} direction="horizontal"/></Space>}
             description={<Paragraph >{item.content}</Paragraph>}
           />
         </List.Item>
