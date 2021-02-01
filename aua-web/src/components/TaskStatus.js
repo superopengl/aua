@@ -12,7 +12,6 @@ const percentage = {
   'to_sign': 50,
   'signed': 75,
   'complete': 100,
-  'archive': 0
 }
 
 const progressStatus = {
@@ -20,7 +19,6 @@ const progressStatus = {
   'to_sign': 'exception',
   'signed': 'normal',
   'complete': 'success',
-  'archive': 'normal'
 }
 
 const tagColor = {
@@ -28,7 +26,6 @@ const tagColor = {
   'to_sign': 'red',
   'signed': 'blue',
   'complete': 'green',
-  'archive': undefined
 }
 
 function getLabelFromStatus(status) {

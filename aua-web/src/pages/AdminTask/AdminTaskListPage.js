@@ -356,7 +356,6 @@ const AdminTaskListPage = (props) => {
     { label: 'To Sign', value: 'to_sign' },
     { label: 'Signed', value: 'signed' },
     { label: 'Complete', value: 'complete' },
-    { label: 'Archive', value: 'archive' },
   ]
 
   return (

@@ -141,7 +141,7 @@ export const searchTask = handlerWrapper(async (req, res) => {
   let query = getManager()
     .createQueryBuilder()
     .from(Task, 'x')
-    .where(`1 = 1`);
+    .where(`x.status != :status`, { status: TaskStatus.ARCHIVE });
   if (role === 'client') {
     query = query.andWhere(`x."userId" = :id`, { id });
   }
