@@ -4,11 +4,20 @@ import { User } from '../entity/User';
 import { sendEmail, SYSTEM_EMAIL_SENDER } from '../services/emailService';
 import { getEmailRecipientName } from './getEmailRecipientName';
 import { getUserEmailAddress } from './getUserEmailAddress';
+import { File } from '../entity/File';
 
 
 export async function sendRequireSignEmail(task: Task) {
   const user = await getRepository(User).findOne(task.userId);
-  const { id: taskId, name: taskName, forWhom } = task;
+  const { id: taskId, docs: taskDocs, name: taskName, forWhom } = task;
+  const fileIds = (taskDocs || []).map(d => d.fileId).filter(x => x);
+  const attachments = fileIds.length ?
+    await getRepository(File)
+      .createQueryBuilder('x')
+      .where(`x.id IN (:...ids)`, { ids: fileIds })
+      .select(['x.fileName as filename', 'x.location as path'])
+      .execute() :
+    undefined;
 
   await sendEmail({
     to: user.email,
@@ -20,5 +29,6 @@ export async function sendRequireSignEmail(task: Task) {
       taskId,
       taskName,
     },
+    attachments,
   });
 }
