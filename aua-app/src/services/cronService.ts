@@ -20,6 +20,9 @@ export const CLIENT_TZ = 'Australia/Sydney';
 export const CRON_EXECUTE_TIME = process.env.NODE_ENV === 'dev' ? moment().add(2, 'minute').format('HH:mm') : '5:00';
 const PROD_CRON_PATTERN = CRON_EXECUTE_TIME.replace(/(.*):(.*)/, '0 $2 $1 * * *'); // at 5 am every day
 
+
+console.log('PROD_CRON_PATTERN', PROD_CRON_PATTERN);
+
 let cronJob = null;
 
 function stopRunningCronJob() {
@@ -81,7 +84,9 @@ function logging(log: {
   sysLog.level = 'info';
   Object.assign(sysLog, log);
   sysLog.createdBy = 'cron';
-  getRepository(SysLog).save(sysLog).catch(() => { });
+  getRepository(SysLog).save(sysLog).catch(err => {
+    console.error('Logging error', errorToJSON(err));
+  });
 }
 
 function trySetTaskDueDateField(task: Task, dueDay: number) {
@@ -165,9 +170,9 @@ export function startCronService() {
     startCronJob();
 
     console.log('[Recurring]'.bgYellow, `Started cron service`);
-    const log = new SysLog();
-    log.level = 'info';
-    log.message = 'Cron service started';
+    logging({
+      message: 'Cron service started'
+    });
   } catch (e) {
     console.error('[Recurring]'.bgYellow, `Failed to start cron service`, errorToJSON(e));
     logging({
