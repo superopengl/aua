@@ -11,7 +11,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Space } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
-import { listRecurring, deleteRecurring, runRecurring, healthCheckRecurring } from 'services/recurringService';
+import { listRecurring, deleteRecurring, runRecurring } from 'services/recurringService';
 import RecurringForm from './RecurringForm';
 import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import { notify } from 'util/notify';
@@ -69,7 +69,6 @@ const RecurringListPage = (props) => {
   const [formVisible, setFormVisible] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [currentId, setCurrentId] = React.useState();
-  const [healthCheckResult, setHealthCheckResult] = React.useState();
 
   const isRecurringDeprecated = item => !item.email || !item.taskTemplateId || !item.portfolioName;
 
@@ -173,10 +172,8 @@ const RecurringListPage = (props) => {
     try {
       setLoading(true);
       const list = await listRecurring();
-      const healthCheckResult = await healthCheckRecurring();
       ReactDom.unstable_batchedUpdates(() => {
         setList(list);
-        setHealthCheckResult(healthCheckResult);
         setLoading(false);
       });
     } catch {
@@ -246,11 +243,7 @@ const RecurringListPage = (props) => {
             <Title level={2} style={{ margin: 'auto' }}>Recurring Management</Title>
           </StyledTitleRow>
 
-          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-            {healthCheckResult && <Alert
-              message={healthCheckResult.error || <>Recurring service is healthy. Next run <TimeAgo value={healthCheckResult.nextRunAt} size="default" type="primary" direction="horizontal"/></>}
-              type={healthCheckResult.error ? 'error' : 'success'}
-              showIcon />}
+          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Recurring</Button>
           </Space>
 

@@ -1,4 +1,4 @@
-import { getRepository, Not, Equal } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { Recurring } from '../entity/Recurring';
 import { CronJob } from 'cron';
 import { SysLog } from '../entity/SysLog';
@@ -7,12 +7,9 @@ import { assert } from '../utils/assert';
 import { TaskStatus } from '../types/TaskStatus';
 import { Task } from '../entity/Task';
 import errorToJSON from 'error-to-json';
-import { getNow } from '../utils/getNow';
-import { CronLock } from '../entity/CronLock';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Portfolio } from '../entity/Portfolio';
 import { User } from '../entity/User';
-import * as os from 'os';
 import { sendNewTaskCreatedEmail } from '../utils/sendNewTaskCreatedEmail';
 import * as moment from 'moment-timezone';
 import 'colors';
@@ -89,7 +86,7 @@ export async function testRunRecurring(recurringId: string) {
 }
 
 async function executeRecurring(recurring: Recurring, resetNextRunAt: boolean) {
-  const { taskTemplateId, portfolioId, nameTemplate, dueDay } = recurring;
+  const { taskTemplateId, portfolioId, nameTemplate } = recurring;
 
   const taskName = nameTemplate.replace('{{createdDate}}', moment().format('DD MMM YYYY'));
   const task = await generateTaskByTaskTemplateAndPortfolio(
@@ -147,52 +144,15 @@ async function executeSingleRecurringFromCron(recurring: Recurring): Promise<voi
   }
 }
 
-async function raceSingletonLock(): Promise<boolean> {
-  const gitHash = process.env.GIT_HASH;
-  if (!gitHash) {
-    throw new Error(`Env var 'GIT_HASH' is not specified`);
-  }
-  if (process.env.NODE_ENV === 'dev') {
-    return true;
-  }
-
-  const hostname = os.hostname();
-  const repo = getRepository(CronLock);
-  const key = 'cron-singleton-lock';
-  const result = await repo.update(
-    {
-      key,
-      gitHash: Not(Equal(gitHash))
-    },
-    {
-      gitHash,
-      lockedAt: getNow(),
-      winner: hostname
-    }
-  );
-  const won = result.affected === 1;
-
-  if (!won) {
-    const entity = await repo.findOne({ key });
-    if (entity) {
-      entity.loser = hostname;
-      await repo.save(entity);
-    }
-  }
-
-  return won;
-}
-
 export async function startCronService() {
   try {
-    const shouldStart = await raceSingletonLock();
-    if (!shouldStart) {
-      return;
-    }
-
     startCronJob();
+    const log = new SysLog();
+    log.level = 'info';
+    log.message = 'Cron service started';
   } catch (e) {
     const log = new SysLog();
+    log.level = 'error';
     log.message = 'Failed to restart cron service';
     log.data = errorToJSON(e);
     logging(log);

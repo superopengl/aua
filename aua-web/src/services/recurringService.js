@@ -20,7 +20,3 @@ export async function listRecurring() {
   return httpGet('recurring');
 }
 
-export async function healthCheckRecurring() {
-  return httpGet('recurring/healthcheck');
-}
-

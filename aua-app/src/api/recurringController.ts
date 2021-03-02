@@ -6,17 +6,15 @@ import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { Portfolio } from '../entity/Portfolio';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { getNow } from '../utils/getNow';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Recurring } from '../entity/Recurring';
 import { CLIENT_TZ, CRON_EXECUTE_TIME, testRunRecurring } from '../services/cronService';
-import { CronLock } from '../entity/CronLock';
 import * as moment from 'moment-timezone';
 import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunAt';
 
 export const saveRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const { id, portfolioId, taskTemplateId, cron, dueDay, startFrom, every, period } = req.body;
+  const { id, portfolioId, taskTemplateId, dueDay, startFrom, every, period } = req.body;
 
   const portfolio = await getRepository(Portfolio).findOne(portfolioId);
   assert(portfolio, 404, 'Porotofolio is not found');
@@ -99,25 +97,4 @@ export const runRecurring = handlerWrapper(async (req, res) => {
   res.json(task);
 });
 
-export const healthCheckRecurring = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
-
-  const expected = process.env.GIT_HASH;
-  const lock = await getRepository(CronLock).findOne({ key: 'cron-singleton-lock' });
-  const actual = lock?.gitHash;
-  const healthy = process.env.NODE_ENV === 'dev' || actual === expected;
-
-  let nextCronRun = moment(CRON_EXECUTE_TIME, 'HH:mm');
-  if(nextCronRun.isBefore()) {
-    nextCronRun = nextCronRun.add(1, 'day');
-  }
-
-  const result = {
-    error: healthy ? null : `Expecting ${expected} but got ${actual}`,
-    lock,
-    nextRunAt: nextCronRun.toDate()
-  };
-
-  res.json(result);
-});
 
