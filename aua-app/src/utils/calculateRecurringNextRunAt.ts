@@ -11,9 +11,11 @@ export function calculateRecurringNextRunAt(recurring: Recurring): Date {
     return startFrom;
   }
 
-  let nextRunMoment = startMoment.tz(CLIENT_TZ).add(every, period);
+  let round = 1;
+  let nextRunMoment = startMoment.clone().tz(CLIENT_TZ).add(every, period);
   while(nextRunMoment.isBefore()) {
-    nextRunMoment.add(every, period);
+    round ++;
+    nextRunMoment = startMoment.clone().tz(CLIENT_TZ).add(every * round, period);
   }
   return nextRunMoment.toDate();
 }
