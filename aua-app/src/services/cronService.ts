@@ -57,7 +57,7 @@ async function onCronJobExecute() {
   });
 }
 
-async function startCronJob() {
+function startCronJob() {
   stopRunningCronJob();
 
   const cronPattern = getCronPattern();
@@ -80,6 +80,7 @@ function logging(log: {
   const sysLog = new SysLog();
   sysLog.level = 'info';
   Object.assign(sysLog, log);
+  sysLog.createdBy = 'cron';
   getRepository(SysLog).save(sysLog).catch(() => { });
 }
 
@@ -157,13 +158,18 @@ async function executeSingleRecurringFromCron(recurring: Recurring): Promise<voi
   }
 }
 
-export async function startCronService() {
+export function startCronService() {
   try {
+    console.log('[Recurring]'.bgYellow, `Starting cron service`);
+
     startCronJob();
+
+    console.log('[Recurring]'.bgYellow, `Started cron service`);
     const log = new SysLog();
     log.level = 'info';
     log.message = 'Cron service started';
   } catch (e) {
+    console.error('[Recurring]'.bgYellow, `Failed to start cron service`, errorToJSON(e));
     logging({
       level: 'error',
       message: 'Failed to restart cron service',
