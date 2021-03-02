@@ -36,6 +36,9 @@ function getCronPattern() {
 
 async function onCronJobExecute() {
   console.log('[Recurring]'.bgYellow, 'Cron job is executing');
+  logging({
+    message: '[Recurring] Cron job is executing'
+  });
 
   const list = await getRepository(Recurring)
     .createQueryBuilder('x')
@@ -49,6 +52,9 @@ async function onCronJobExecute() {
     await executeSingleRecurringFromCron(r);
   }
   console.log('[Recurring]'.bgYellow, `Cron job finished ${list.length} recurrings`);
+  logging({
+    message: `[Recurring] Cron job finished ${list.length} recurrings`
+  });
 }
 
 async function startCronJob() {
@@ -66,8 +72,15 @@ async function startCronJob() {
   return cronJob;
 }
 
-function logging(log: SysLog) {
-  getRepository(SysLog).save(log).catch(() => { });
+function logging(log: {
+  level?: string,
+  message: string,
+  data?: any
+}) {
+  const sysLog = new SysLog();
+  sysLog.level = 'info';
+  Object.assign(sysLog, log);
+  getRepository(SysLog).save(sysLog).catch(() => { });
 }
 
 function trySetTaskDueDateField(task: Task, dueDay: number) {
@@ -121,24 +134,24 @@ async function executeSingleRecurringFromCron(recurring: Recurring): Promise<voi
     console.log('[Recurring]'.bgYellow, `Executing recuring ${id}`);
     await executeRecurring(recurring, true);
 
-    const log = new SysLog();
-    log.level = 'info';
-    log.message = 'Recurring complete';
-    log.data = {
-      recurringId: id,
-    };
-    logging(log);
+    logging({
+      message: 'Recurring complete',
+      data: {
+        recurringId: id
+      }
+    });
+
 
     console.log('[Recurring]'.bgYellow, `Done with recuring ${id}`);
   } catch (err) {
-    const log = new SysLog();
-    log.level = 'error';
-    log.message = 'Recurring error';
-    log.data = {
-      recurringId: id,
-      error: errorToJSON(err)
-    };
-    logging(log);
+    logging({
+      level: 'error',
+      message: 'Recurring error',
+      data: {
+        recurringId: id,
+        error: errorToJSON(err)
+      }
+    });
 
     console.error('[Recurring]'.bgYellow, `Error from recuring ${id}`, err);
   }
@@ -151,10 +164,10 @@ export async function startCronService() {
     log.level = 'info';
     log.message = 'Cron service started';
   } catch (e) {
-    const log = new SysLog();
-    log.level = 'error';
-    log.message = 'Failed to restart cron service';
-    log.data = errorToJSON(e);
-    logging(log);
+    logging({
+      level: 'error',
+      message: 'Failed to restart cron service',
+      data: errorToJSON(e)
+    });
   }
 }
