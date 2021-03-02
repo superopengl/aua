@@ -19,15 +19,34 @@ function createSydneyDate(dateString: string): Date {
 describe('calculateRecurringNextRunAt', () => {
   let nowMoment: Moment;
 
-  beforeAll(() => {
-    Date.now = jest.fn().mockReturnValue(createSydneyDate('2021-01-31 13:00'));
-    nowMoment = moment();
-  })
+  describe('next next run', () => {
+    beforeAll(() => {
+      Date.now = jest.fn().mockReturnValue(createSydneyDate('2021-02-28 13:00'));
+      nowMoment = moment();
+    })
 
-  afterAll(() => {
-    (Date.now as any).mockRestore();
-  })
+    afterAll(() => {
+      (Date.now as any).mockRestore();
+    })
+
+    it('nextRunAt should be the last day', () => {
+      const recurring = createRecurring('2021-01-31', 1, 'month');
+      const nextRunAt = calculateRecurringNextRunAt(recurring);
+      const expected = createSydneyDate('2021-03-31 5:00');
+      expect(nextRunAt).toEqual(expected);
+    });
+  });
+
   describe('startFrom is past day', () => {
+
+    beforeAll(() => {
+      Date.now = jest.fn().mockReturnValue(createSydneyDate('2021-01-31 13:00'));
+      nowMoment = moment();
+    })
+  
+    afterAll(() => {
+      (Date.now as any).mockRestore();
+    })
 
     it('nextRunAt should be future day with 1 week recurring', () => {
       const recurring = createRecurring('2021-01-15', 1, 'week');
@@ -67,6 +86,15 @@ describe('calculateRecurringNextRunAt', () => {
   });
 
   describe('startFrom is past last day of month', () => {
+
+    beforeAll(() => {
+      Date.now = jest.fn().mockReturnValue(createSydneyDate('2021-01-31 13:00'));
+      nowMoment = moment();
+    })
+  
+    afterAll(() => {
+      (Date.now as any).mockRestore();
+    })
     it('nextRunAt should be future last day of month with 1 month recurring', () => {
       const recurring = createRecurring('2021-01-31', 1, 'month');
       const nextRunAt = calculateRecurringNextRunAt(recurring);
@@ -84,6 +112,15 @@ describe('calculateRecurringNextRunAt', () => {
   });
 
   describe('startFrom is future day', () => {
+
+    beforeAll(() => {
+      Date.now = jest.fn().mockReturnValue(createSydneyDate('2021-01-31 13:00'));
+      nowMoment = moment();
+    })
+  
+    afterAll(() => {
+      (Date.now as any).mockRestore();
+    })
     it('nextRunAt should be startFrom day', () => {
       const recurring = createRecurring('2021-02-01', 3, 'month');
       const nextRunAt = calculateRecurringNextRunAt(recurring);
