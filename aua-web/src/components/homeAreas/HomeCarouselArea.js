@@ -82,8 +82,11 @@ const HomeCarouselAreaRaw = props => {
         <Space direction="vertical" style={{ maxWidth: '1200px', textAlign: 'center' }}>
           <Title style={{ fontSize: catchPhraseSize }}>AU Accounting Office</Title>
           <Title level={2} style={{ marginTop: 0, fontWeight: 300, fontSize: Math.max(catchPhraseSize * 0.5, 14) }}>
-            We are providing professional accounting and tax services to our clients including individuals, Sole traders, Partnerships, Companies, Trusts etc.
-            You’ve got the skills and the experience. We’ve got diverse projects and meaningful work. Let’s take your career to the next level.
+          The firm is setup for providing professional accounting and tax services to clients
+including individuals, Sole traders, Partnerships, Companies, Trusts etc. However, it is not simply
+just these. We are here to be your <strong>problem revolving consultant, business development
+advisory, tax planner, to be your platform, your network. Join us today, start your
+business journey safely and successfully.</strong>
               </Title>
           {isGuest &&
             <Row style={{maxWidth: 500, margin: '0 auto'}} gutter={30}>

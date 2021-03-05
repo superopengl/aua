@@ -6,6 +6,8 @@ NC='\033[0m'
 echo -e "${ORANGE}AUA${NC}"
 
 alias ahome='cd /Users/jshao/github/aua'
+alias bs='cd /Users/jshao/github/aua/*app; pnpm dev'
+alias fs='cd /Users/jshao/github/aua/*web; pnpm start'
 
 export AWS_PROFILE=aua
 
