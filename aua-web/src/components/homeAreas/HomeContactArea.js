@@ -1,5 +1,7 @@
 import { HomeOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
-import { Typography, Row, Col } from 'antd';
+import { Divider } from 'antd';
+import { Image } from 'antd';
+import { Typography, Row, Col, Space } from 'antd';
 import { HashAnchorPlaceholder } from 'components/HashAnchorPlaceholder';
 import React from 'react';
 import styled from 'styled-components';
@@ -17,6 +19,10 @@ a {
   &:hover {
     text-decoration: underline;
   }
+}
+
+.ant-divider {
+  border-color: #f0f0f0;
 }
 `;
 
@@ -71,9 +77,47 @@ class HomeContactArea extends React.Component {
           </Row>
           <Row>
             <Col span={24}>
-            <HomeOutlined style={{ marginRight: 8 }} /><a href="https://maps.google.com/?q=Unit 101, 11 Spring St., Chatswood, NSW 2067" target="_blank" rel="noopener noreferrer">
+              <HomeOutlined style={{ marginRight: 8 }} /><a href="https://maps.google.com/?q=Unit 101, 11 Spring St., Chatswood, NSW 2067" target="_blank" rel="noopener noreferrer">
                 Unit 101, 11 Spring St., Chatswood, NSW 2067
                 </a>
+            </Col>
+          </Row>
+          {/* <Divider /> */}
+          <Row style={{ maxWidth: 480, margin: '1rem auto' }}>
+            <Col span={24}>
+              <a href="https://www.linkedin.com/in/jinlinzhou-auao" target="_blank" rel="noreferrer">
+                <Space>
+
+                  <Image src="/images/linkedin-logo.png" width={80} preview={false} />
+              https://www.linkedin.com/in/jinlinzhou-auao
+              </Space>
+              </a>
+            </Col>
+          </Row>
+          <Row style={{maxWidth: 400, margin: 'auto'}} gutter={[30, 30]}>
+            <Col span={6}>
+              <Space direction="vertical" size="small">
+                <Image src="/images/qr-public.jpg" width={80} preview={true} />
+                微信公众号
+              </Space>
+            </Col>
+            <Col span={6}>
+              <Space direction="vertical" size="small">
+                <Image src="/images/qr-wechat.jpg" width={80} preview={true} />
+                Wechat
+              </Space>
+            </Col>
+            <Col span={6}>
+              <Space direction="vertical" size="small">
+                <Image src="/images/qr-channel.jpg" width={80} preview={true} />
+                Wechat Channel
+              </Space>
+            </Col>
+            <Col span={6}>
+              <Space direction="vertical" size="small">
+                <Image src="/images/qr-weibo.jpg" width={80} preview={true} />
+                Weibo
+              </Space>
             </Col>
           </Row>
         </InfoCard>

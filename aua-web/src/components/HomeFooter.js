@@ -41,7 +41,7 @@ width: 200px;
 
 const HomeFooter = () => (
   <FooterStyled>
-    <StyledRegisteredBadge><Image src="images/registered.png" /></StyledRegisteredBadge>
+    {/* <StyledRegisteredBadge><Image src="images/registered.png" /></StyledRegisteredBadge> */}
     <section id="about">
       <Row>
         <Col span={24}>

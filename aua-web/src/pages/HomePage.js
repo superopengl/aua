@@ -5,13 +5,14 @@ import { HashAnchorPlaceholder } from 'components/HashAnchorPlaceholder';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeContactArea from 'components/homeAreas/HomeContactArea';
 import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
-import HomeServiceInfoArea from 'components/homeAreas/HomeServiceInfoArea';
+import HomeBossArea from 'components/homeAreas/HomeBossArea';
 import HomeTeamArea from 'components/homeAreas/HomeTeamArea';
 import HomeFooter from 'components/HomeFooter';
 import HomeHeader from 'components/HomeHeader';
 import React from 'react';
 import { AiOutlineMessage } from "react-icons/ai";
 import styled from 'styled-components';
+import HomeServiceInfoArea from 'components/homeAreas/HomeServiceInfoArea';
 
 const { Content } = Layout;
 
@@ -84,11 +85,12 @@ class HomePage extends React.Component {
           <section>
             <HomeCarouselArea></HomeCarouselArea>
           </section>
+          <section><HomeBossArea /></section>
           <HashAnchorPlaceholder id="services" />
           <section><HomeServiceInfoArea /></section>
           {/* <section><HomeServiceArea /></section> */}
-          <HashAnchorPlaceholder id="team" />
-          <section><HomeTeamArea /></section>
+          {/* <HashAnchorPlaceholder id="team" />
+          <section><HomeTeamArea /></section> */}
           <section><HomeContactArea bgColor="#142952"></HomeContactArea></section>
         </ContentStyled>
         <HomeFooter></HomeFooter>

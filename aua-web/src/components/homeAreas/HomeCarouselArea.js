@@ -11,7 +11,7 @@ const { Title } = Typography;
 
 
 const ContainerStyled = styled.div`
-border-bottom: 1px solid #f0f0f0;
+// border-bottom: 1px solid #f0f0f0;
 margin: 0 auto 0 auto;
 // padding: 1rem;
 width: 100%;
