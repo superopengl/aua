@@ -98,7 +98,7 @@ async function mdToPdfBuffer(md) {
   }, {
     launch_options: {
       args: ['--no-sandbox']
-    }
+    } as any
   });
   return pdf.content;
 }
