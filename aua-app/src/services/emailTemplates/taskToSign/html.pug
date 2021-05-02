@@ -3,6 +3,11 @@ p Dear #{toWhom}
 p The task 
   strong #{taskName}
   |  requires your signature.
+p 
+  strong #{taskName}
+  | 需要您登录portal进行签字确认。登录网址请点击
+  a(href=website) #{website}
+  | 。
 
 p Please log into 
   a(href=website) #{website}
