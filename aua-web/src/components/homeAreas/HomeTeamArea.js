@@ -51,7 +51,7 @@ class HomeTeamArea extends React.Component {
           <StyledAvatar src="/images/avatar-chaire.jpg" />
           <section>
             <p>
-              Hi, I am Claire. I have been in Australia for more than 5 years， been working in our firm for more
+              Hi, I am Claire. I have been in Australia for more than 5 years, been working in our firm for more
               than 3 years. With my life experience of crossing Australia in the past where I worked, I loved
               and I enjoyed.</p>
             <p>

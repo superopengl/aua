@@ -5,6 +5,7 @@ import { HashAnchorPlaceholder } from 'components/HashAnchorPlaceholder';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeContactArea from 'components/homeAreas/HomeContactArea';
 import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
+import HomeServiceInfoArea from 'components/homeAreas/HomeServiceInfoArea';
 import HomeTeamArea from 'components/homeAreas/HomeTeamArea';
 import HomeFooter from 'components/HomeFooter';
 import HomeHeader from 'components/HomeHeader';
@@ -84,7 +85,8 @@ class HomePage extends React.Component {
             <HomeCarouselArea></HomeCarouselArea>
           </section>
           <HashAnchorPlaceholder id="services" />
-          <section><HomeServiceArea /></section>
+          <section><HomeServiceInfoArea /></section>
+          {/* <section><HomeServiceArea /></section> */}
           <HashAnchorPlaceholder id="team" />
           <section><HomeTeamArea /></section>
           <section><HomeContactArea bgColor="#142952"></HomeContactArea></section>
