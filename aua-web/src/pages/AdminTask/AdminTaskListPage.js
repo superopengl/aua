@@ -61,7 +61,7 @@ const DEFAULT_QUERY_INFO = {
   page: 1,
   size: 50,
   total: 0,
-  status: ['todo', 'signed', 'to_sign', 'complete'],
+  status: ['todo', 'review', 'held', 'signed', 'to_sign', 'complete'],
   assignee: null,
   orderField: 'lastUpdatedAt',
   orderDirection: 'DESC'
@@ -352,6 +352,9 @@ const AdminTaskListPage = (props) => {
   }, []);
 
   const StatusSelectOptions = [
+    { label: 'To Do', value: 'todo' },
+    { label: 'Review', value: 'review' },
+    { label: 'Held', value: 'held' },
     { label: 'To Do', value: 'todo' },
     { label: 'To Sign', value: 'to_sign' },
     { label: 'Signed', value: 'signed' },

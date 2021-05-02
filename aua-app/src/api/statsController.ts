@@ -55,6 +55,8 @@ async function getTaskStat() {
     return pre;
   }, {
     todo: 0,
+    review: 0,
+    held: 0,
     to_sign: 0,
     signed: 0,
     complete: 0,

@@ -176,6 +176,10 @@ const ProceedTaskPage = (props) => {
   const status = task?.status;
   const defaultStatus = {
     todo: 'To Do',
+    review: 'Review',
+    held: 'Held',
+    to_pay: 'To Pay',
+    to_refund: 'To Refund',
     to_sign: 'To Sign',
     signed: 'Signed',
     complete: 'Complete',
@@ -186,6 +190,8 @@ const ProceedTaskPage = (props) => {
 
   const options = [
     { value: 'todo', label: 'To Do' },
+    { value: 'review', label: <Text style={{color: 'orange'}}>Review</Text> },
+    { value: 'held', label: <Text style={{color: 'gray'}}>Held</Text> },
     { value: 'to_sign', label: 'To Sign' },
     { value: 'signed', label: 'Signed' },
     { value: 'complete', label: <Text type="success">Complete</Text> },

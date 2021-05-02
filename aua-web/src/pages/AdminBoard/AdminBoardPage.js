@@ -67,7 +67,7 @@ const DEFAULT_QUERY_INFO = {
   page: 1,
   size: 200,
   total: 0,
-  status: ['todo', 'to_sign', 'signed', 'complete'],
+  status: ['todo', 'review', 'held', 'to_sign', 'signed', 'complete'],
   orderField: 'lastUpdatedAt',
   orderDirection: 'DESC'
 };
