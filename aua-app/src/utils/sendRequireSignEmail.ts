@@ -10,7 +10,7 @@ import { File } from '../entity/File';
 export async function sendRequireSignEmail(task: Task) {
   const user = await getRepository(User).findOne(task.userId);
   const { id: taskId, docs: taskDocs, name: taskName, forWhom } = task;
-  const fileIds = (taskDocs || []).map(d => d.fileId).filter(x => x);
+  const fileIds = (taskDocs || []).filter(d => d.requiresSign).map(d => d.fileId).filter(x => x);
   const attachments = fileIds.length ?
     await getRepository(File)
       .createQueryBuilder('x')
