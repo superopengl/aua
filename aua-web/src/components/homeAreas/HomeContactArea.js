@@ -1,4 +1,5 @@
 import { HomeOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
+import Icon from '@ant-design/icons';
 import { Divider } from 'antd';
 import { Image } from 'antd';
 import { Typography, Row, Col, Space } from 'antd';
@@ -6,6 +7,8 @@ import { HashAnchorPlaceholder } from 'components/HashAnchorPlaceholder';
 import React from 'react';
 import styled from 'styled-components';
 import HomeRowArea from "./HomeRowArea";
+import { FaMailBulk } from 'react-icons/fa';
+import { BsMailbox, BsMailbox2 } from 'react-icons/bs';
 
 const { Title } = Typography;
 
@@ -77,9 +80,13 @@ class HomeContactArea extends React.Component {
           </Row>
           <Row>
             <Col span={24}>
-              <HomeOutlined style={{ marginRight: 8 }} /><a href="https://maps.google.com/?q=Unit 101, 11 Spring St., Chatswood, NSW 2067" target="_blank" rel="noopener noreferrer">
-                Unit 101, 11 Spring St., Chatswood, NSW 2067
+              <HomeOutlined style={{ marginRight: 8 }} /><a href="https://maps.google.com/?q=Suite 770, 47A 436 Victoria Ave, Chatswood, NSW, 2067" target="_blank" rel="noopener noreferrer">
+                Suite 770, 47A 436 Victoria Ave, Chatswood, NSW, 2067
                 </a>
+            </Col>
+            <Col span={24}>
+              <Icon component={() => <BsMailbox2 />} style={{ marginRight: 8 }}/>
+              PO Box 770, Chatswood, NSW, 2067
             </Col>
           </Row>
           {/* <Divider /> */}
@@ -87,7 +94,6 @@ class HomeContactArea extends React.Component {
             <Col span={24}>
               <a href="https://www.linkedin.com/in/jinlinzhou-auao" target="_blank" rel="noreferrer">
                 <Space>
-
                   <Image src="/images/linkedin-logo.png" width={80} preview={false} />
               https://www.linkedin.com/in/jinlinzhou-auao
               </Space>
