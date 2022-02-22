@@ -4,7 +4,7 @@ export class CreateAdminUser1596415746494 implements MigrationInterface {
 
     // Initial password is 'admin'
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`INSERT INTO public."user" (id, email, "givenName", "surname", secret, salt, role, status)
+        await queryRunner.query(`INSERT INTO aua."user" (id, email, "givenName", "surname", secret, salt, role, status)
         VALUES ('3e088097-9a9f-40a8-a810-5903527514e5',
         'admin@auao.com.au',
         'System',
