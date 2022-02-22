@@ -8,7 +8,7 @@ import {
   UserAddOutlined, UserOutlined, ReconciliationOutlined,
   PicLeftOutlined
 } from '@ant-design/icons';
-import { Avatar, Badge, Button, Drawer, Layout, Menu, Modal, Typography } from 'antd';
+import { Avatar, Badge, Button, Drawer, Image, Layout, Menu, Modal, Typography, Row } from 'antd';
 import React from 'react';
 import MediaQuery from 'react-responsive';
 import { Link, withRouter } from 'react-router-dom';
@@ -18,7 +18,7 @@ import styled from 'styled-components';
 import { GlobalContext } from '../contexts/GlobalContext';
 
 const { Header } = Layout;
-const { Text } = Typography;
+const { Text, Link: TextLink } = Typography;
 const HeaderStyled = styled(Header)`
 z-index: 100 !important;
 position: fixed;
@@ -106,8 +106,25 @@ const HomeHeaderRaw = props => {
           <img alt="AUAO logo" src="/images/header-logo.png" width="auto" height="60" style={{ padding: '2px 0 2px 0' }}></img>
         </HashLink>
         {/* {isAdmin && <Text>Admin</Text>} */}
+        <MediaQuery minDeviceWidth={760}>
+          <div style={{ display: 'flex', alignItems: 'baseline', flexDirection: 'column', marginTop: -10, marginLeft: 32, position: 'relative' }}>
+            <Text style={{ position: 'absolute', top: 28, left: -6 }} type="secondary"><i>Affordable & Customisable Business Resource Planning System for SMB</i></Text>
+            <Row gutter={12}>
+                <Text type="secondary"><i>Partner with</i></Text>
+                <TextLink href="https://login.xero.com/identity/user/login" target="_blank" style={{marginLeft: 8}}>
+                  <Image preview={false} src="/images/xero.png" width={60}/>
+                </TextLink>
+                <TextLink href="https://www.myob.com/au" target="_blank" style={{marginLeft: 8}}>
+                  <Image preview={false} src="/images/mjob.png" width={70}/>
+                </TextLink>
+                <TextLink href="https://www.smirp.io/" target="_blank" style={{marginLeft: 8}}>
+                  <Image preview={false} src="/images/smirp.png" width={90}/>
+                </TextLink>
+            </Row>
+          </div>
+        </MediaQuery>
       </HeaderLogo>
-      <MediaQuery minDeviceWidth={801}>
+      <MediaQuery minDeviceWidth={1101}>
         <MenuContianer>
           <Menu
             onClick={handleClick}
@@ -145,7 +162,7 @@ const HomeHeaderRaw = props => {
         </MenuContianer>
         {/* <Tag>{user?.memberId}</Tag> */}
       </MediaQuery>
-      <MediaQuery maxDeviceWidth={800}>
+      <MediaQuery maxDeviceWidth={1100}>
         <Badge count={notifyCount} showZero={false} ><Button type="default" onClick={showDrawer}>
           <MenuOutlined />
         </Button></Badge>
