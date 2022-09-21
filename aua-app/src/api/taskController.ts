@@ -166,7 +166,7 @@ export const searchTask = handlerWrapper(async (req, res) => {
       .orderBy('"taskId"')
       .addOrderBy('"createdAt"', 'DESC')
       .distinctOn(['"taskId"'])
-      , 'm', `x.id = m."taskId" AND m."clientUserId" = u.id`)
+      , 'm', `x.id = m."taskId" AND m."clientUserId" = x."userId"`)
     .select([
       `x.id as id`,
       `x.name as name`,
