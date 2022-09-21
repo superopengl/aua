@@ -141,7 +141,6 @@ export const searchTask = handlerWrapper(async (req, res) => {
   let query = getManager()
     .createQueryBuilder()
     .from(Task, 'x')
-    .where(`x.status != :status`, { status: TaskStatus.ARCHIVE });
   if (role === 'client') {
     query = query.andWhere(`x."userId" = :id`, { id });
   }
@@ -160,8 +159,8 @@ export const searchTask = handlerWrapper(async (req, res) => {
   if (clientId) {
     query = query.andWhere(`x."userId" = :clientId`, { clientId });
   }
-  query = query.innerJoin(q => q.from(TaskTemplate, 'j').select('*'), 'j', 'j.id = x."taskTemplateId"')
-    .innerJoin(q => q.from(User, 'u').select('*'), 'u', 'x."userId" = u.id')
+  query = query.innerJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
+    .leftJoin(q => q.from(User, 'u').select('*'), 'u', 'x."userId" = u.id')
     .leftJoin(q => q.from(Message, 'm')
       .andWhere(`"readAt" IS NULL`)
       .orderBy('"taskId"')

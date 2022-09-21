@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Modal, Select, Space, Row, Table, Tooltip, Typography, DatePicker, Pagination, Col } from 'antd';
+import { Button, Input, Layout, Modal, Select, Space, Row, Table, Tooltip, Typography, DatePicker, Pagination, Col, Tag } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import HomeHeader from 'components/HomeHeader';
 import { TaskStatus } from 'components/TaskStatus';
@@ -126,7 +126,7 @@ const AdminTaskListPage = (props) => {
       title: 'User',
       dataIndex: 'email',
       sorter: () => 0,
-      render: (text) => <Text><Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={text || ''} /></Text>
+      render: (text) => {text ? <Text><Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={text || ''} /></Text> : <Tag color="red">deleted user</Tag>>}
     },
     {
       title: 'Created At',
@@ -358,6 +358,7 @@ const AdminTaskListPage = (props) => {
     { label: 'To Sign', value: 'to_sign' },
     { label: 'Signed', value: 'signed' },
     { label: 'Complete', value: 'complete' },
+    { label: 'Archived', value: 'archive' },
   ]
 
   return (
