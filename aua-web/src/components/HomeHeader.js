@@ -6,7 +6,8 @@ import {
   SecurityScanOutlined,
   SnippetsOutlined, TeamOutlined, ToolOutlined,
   UserAddOutlined, UserOutlined, ReconciliationOutlined,
-  PicLeftOutlined
+  PicLeftOutlined,
+  DropboxSquareFilled
 } from '@ant-design/icons';
 import { Avatar, Badge, Button, Drawer, Image, Layout, Menu, Modal, Typography, Row } from 'antd';
 import React from 'react';
@@ -19,6 +20,7 @@ import { GlobalContext } from '../contexts/GlobalContext';
 
 const { Header } = Layout;
 const { Text, Link: TextLink } = Typography;
+const DROPBOX_LINK_URL = 'https://www.dropbox.com/sh/7mpky801qf8f46c/AABdTXTaO6vp6aSd9XOVdUQea?dl=0';
 const HeaderStyled = styled(Header)`
 z-index: 100 !important;
 position: fixed;
@@ -110,13 +112,13 @@ const HomeHeaderRaw = props => {
           <div style={{ display: 'flex', alignItems: 'baseline', flexDirection: 'column', marginTop: -10, marginLeft: 32, position: 'relative' }}>
             <Text style={{ position: 'absolute', top: 28, left: -6 }} type="secondary"><i>Affordable & Customisable Business Resource Planning System for SMB</i></Text>
             <Row gutter={12}>
-                <Text type="secondary"><i>Partner with</i></Text>
-                <TextLink href="https://login.xero.com/identity/user/login" target="_blank" style={{marginLeft: 8}}>
-                  <Image preview={false} src="/images/xero.png" width={60}/>
-                </TextLink>
-                <TextLink href="https://www.myob.com/au" target="_blank" style={{marginLeft: 8}}>
-                  <Image preview={false} src="/images/mjob.png" width={70}/>
-                </TextLink>
+              <Text type="secondary"><i>Partner with</i></Text>
+              <TextLink href="https://login.xero.com/identity/user/login" target="_blank" style={{ marginLeft: 8 }}>
+                <Image preview={false} src="/images/xero.png" width={60} />
+              </TextLink>
+              <TextLink href="https://www.myob.com/au" target="_blank" style={{ marginLeft: 8 }}>
+                <Image preview={false} src="/images/mjob.png" width={70} />
+              </TextLink>
             </Row>
           </div>
         </MediaQuery>
@@ -129,6 +131,7 @@ const HomeHeaderRaw = props => {
             mode="horizontal" style={{ border: 0 }}>
             {isGuest && <Menu.Item key="home"><HashLink to="/#home">Home</HashLink></Menu.Item>}
             {isGuest && <Menu.Item key="services"><HashLink to="/#services">Services</HashLink></Menu.Item>}
+            {isGuest && <Menu.Item key="resources"><TextLink href={DROPBOX_LINK_URL} target='_blank'>Dropbox Resources</TextLink></Menu.Item>}
             {/* {isGuest && <Menu.Item key="team"><HashLink to="/#team">Team</HashLink></Menu.Item>} */}
             {isGuest && <Menu.Item key="blog"><HashLink to="/blogs">Blog</HashLink></Menu.Item>}
             {isGuest && <Menu.Item key="signin"><Link to="/signon">Sign On</Link></Menu.Item>}
@@ -196,6 +199,7 @@ const HomeHeaderRaw = props => {
             {canChangePassword && <Menu.Item key="changePassword"><SecurityScanOutlined /> <Link to="/change_password">Change Password</Link></Menu.Item>}
             {isGuest && <Menu.Item key="home"><HomeOutlined /> <HashLink to="/#home" onClick={onClose}>Home</HashLink></Menu.Item>}
             {isGuest && <Menu.Item key="services"><HeartOutlined /> <HashLink to="/#services" onClick={onClose}>Services</HashLink></Menu.Item>}
+            {isGuest && <Menu.Item key="resources"><DropboxSquareFilled/> <TextLink href={DROPBOX_LINK_URL} target='_blank' onClick={onClose}>Dropbox Resources</TextLink></Menu.Item>}
             {/* {isGuest && <Menu.Item key="team"><TeamOutlined /> <HashLink to="/#team" onClick={onClose}>Team</HashLink></Menu.Item>} */}
             {isGuest && <Menu.Item key="blog"><PicLeftOutlined /> <Link to="/blogs">Blog</Link></Menu.Item>}
             {!isGuest && <Menu.Item key="logout" onClick={handleLogout}><LogoutOutlined />{isAdmin ? ' Admin' : isAgent ? ' Agent' : null} Log Out</Menu.Item>}
