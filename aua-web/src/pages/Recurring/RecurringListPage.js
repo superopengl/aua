@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Button, Drawer, Table, Tooltip, Modal, Alert } from 'antd';
+import { Typography, Layout, Button, Drawer, Table, Tooltip, Modal } from 'antd';
 import HomeHeader from 'components/HomeHeader';
-import * as moment from 'moment';
 import Text from 'antd/lib/typography/Text';
 import {
   DeleteOutlined, EditOutlined, CaretRightFilled, PlusOutlined, DashOutlined
@@ -115,7 +114,7 @@ const RecurringListPage = (props) => {
       title: 'Schedule',
       render: (text, record) => {
         const deprecated = isRecurringDeprecated(record);
-        const { startFrom, every, period, lastRunAt, nextRunAt } = record;
+        const { startFrom, lastRunAt, nextRunAt } = record;
         return <StylePatternTable>
           <tbody>
             {startFrom && <tr>

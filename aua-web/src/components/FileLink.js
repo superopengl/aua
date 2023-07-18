@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Spin, Space } from 'antd';
+import { Typography, Space } from 'antd';
 import { getFile } from 'services/fileService';
 import { FileIcon } from './FileIcon';
 import { from, Subscription } from 'rxjs';

@@ -4,7 +4,7 @@ import TaskGenerator from './TaskGenerator';
 import StepWizard from 'react-step-wizard';
 import TaskFieldsEditor from './TaskFieldsEditor';
 import GenDocFieldStep from './GenDocFieldStep';
-import { Spin, Progress, Space, Typography } from 'antd';
+import { Progress, Space, Typography } from 'antd';
 import GenDocLinkStep from './GenDocLinkStep';
 import UploadDocStep from './UploadDocStep';
 import FinalReviewStep from './FinalReviewStep';

@@ -1,7 +1,6 @@
 import React from 'react';
-import HomeRowArea from "./HomeRowArea";
 import styled from 'styled-components';
-import { Typography, Space, Row, Col, Descriptions } from 'antd';
+import { Row, Col } from 'antd';
 import { ServiceInfoCard } from 'components/ServiceInfoCard';
 
 const ServiceTitle = styled.h1`

@@ -1,8 +1,6 @@
 import React from 'react';
-import HomeRowArea from "./homeAreas/HomeRowArea";
 import styled from 'styled-components';
-import { Typography, Space, Card } from 'antd';
-import { Divider } from 'antd';
+import { Typography, Card } from 'antd';
 
 const { Title, Text, Paragraph } = Typography;
 

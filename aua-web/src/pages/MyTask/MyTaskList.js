@@ -70,12 +70,7 @@ const MyTaskList = (props) => {
           title={<Text style={{ fontSize: '1rem' }}>{item.name}</Text>}
           description={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <TimeAgo value={item.lastUpdatedAt} prefix="Last Updated" accurate={true} />
-            <Space>
-              <Button type="link" key="action" type="link" onClick={() => actionOnTask(item)} icon={getActionIcon(item.status)}></Button>
-              {/* {item.status === 'draft' && <>
-                  <Button key="delete" type="link" danger disabled={loading} onClick={e => handleDelete(e, item)} icon={<DeleteOutlined />}></Button>
-                </>} */}
-            </Space>
+            <Button type="link" key="action" onClick={() => actionOnTask(item)} icon={getActionIcon(item.status)}></Button>
           </Space>
           }
         />

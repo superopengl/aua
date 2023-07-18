@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 import { Input, Button, Form, Typography } from 'antd';
 import { saveDocTemplate, getDocTemplate } from 'services/docTemplateService';
 import { notify } from 'util/notify';
-import { Spin } from 'antd';
 import { useWindowHeight } from '@react-hook/window-size'
 import { SampleMarkdown } from './SampleMarkdown';
 import { BuiltInFieldDef } from 'components/FieldDef';

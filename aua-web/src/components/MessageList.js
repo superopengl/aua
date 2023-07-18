@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Typography, List, Space, Spin } from 'antd';
+import { Typography, List, Space } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import { countUnreadMessage } from 'services/messageService';
 import { GlobalContext } from 'contexts/GlobalContext';

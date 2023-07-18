@@ -3,11 +3,10 @@ import styled from 'styled-components';
 import { Typography, Layout } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import { withRouter } from 'react-router-dom';
-import * as queryString from 'query-string';
 import ProfileForm from './ProfileForm';
 import { GlobalContext } from 'contexts/GlobalContext';
 
-const { Title, Paragraph, Link } = Typography;
+const { Title } = Typography;
 
 const ContainerStyled = styled.div`
 margin: 6rem auto 2rem auto;
