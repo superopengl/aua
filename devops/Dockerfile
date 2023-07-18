@@ -35,7 +35,7 @@ RUN apt-get update \
 # # Run everything after as non-privileged user.
 # USER pptruser
 
-RUN npm install -g pnpm@5
+RUN npm install -g pnpm@7
 #RUN apk update && apk add curl
 
 # RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
