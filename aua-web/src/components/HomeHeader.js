@@ -117,9 +117,6 @@ const HomeHeaderRaw = props => {
                 <TextLink href="https://www.myob.com/au" target="_blank" style={{marginLeft: 8}}>
                   <Image preview={false} src="/images/mjob.png" width={70}/>
                 </TextLink>
-                <TextLink href="https://www.smirp.io/" target="_blank" style={{marginLeft: 8}}>
-                  <Image preview={false} src="/images/smirp.png" width={90}/>
-                </TextLink>
             </Row>
           </div>
         </MediaQuery>
