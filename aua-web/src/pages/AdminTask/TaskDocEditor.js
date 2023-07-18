@@ -163,10 +163,10 @@ export const TaskDocEditor = (props) => {
       // title: 'Action',
       render: (value, doc) => <Space >
         <Tooltip title={doc.requiresSign ? 'Revoke sign request' : 'Requires sign'}>
-          <Button type="link" type={doc.requiresSign ? 'primary' : 'secondary'} onClick={() => toggleRequiresSign(doc)} icon={<HighlightOutlined />} disabled={!doc.fileId || doc.signedAt}></Button>
+          <Button type={doc.requiresSign ? 'primary' : 'secondary'} onClick={() => toggleRequiresSign(doc)} icon={<HighlightOutlined />} disabled={!doc.fileId || doc.signedAt}></Button>
         </Tooltip>
         <Tooltip title={`${doc.isFeedback ? 'Exclude from' : 'Include into'} feedback documents`}>
-          <Button type="link" type={doc.isFeedback ? 'primary' : 'secondary'} onClick={() => toggleIsFeedback(doc)} icon={<FlagOutlined />} disabled={!doc.fileId}></Button>
+          <Button type={doc.isFeedback ? 'primary' : 'secondary'} onClick={() => toggleIsFeedback(doc)} icon={<FlagOutlined />} disabled={!doc.fileId}></Button>
         </Tooltip>
         <Tooltip title="Delete document">
           <Button type="link" onClick={() => handleDeleteDoc(doc)} danger icon={<DeleteOutlined />}></Button>

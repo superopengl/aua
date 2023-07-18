@@ -1,14 +1,12 @@
 import { HomeOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 import Icon from '@ant-design/icons';
-import { Divider } from 'antd';
 import { Image } from 'antd';
 import { Typography, Row, Col, Space } from 'antd';
 import { HashAnchorPlaceholder } from 'components/HashAnchorPlaceholder';
 import React from 'react';
 import styled from 'styled-components';
 import HomeRowArea from "./HomeRowArea";
-import { FaMailBulk } from 'react-icons/fa';
-import { BsMailbox, BsMailbox2 } from 'react-icons/bs';
+import { BsMailbox2 } from 'react-icons/bs';
 
 const { Title } = Typography;
 
@@ -92,7 +90,7 @@ class HomeContactArea extends React.Component {
           {/* <Divider /> */}
           <Row style={{ maxWidth: 480, margin: '1rem auto' }}>
             <Col span={24}>
-              <a href="https://www.linkedin.com/in/jinlinzhou-auao" target="_blank" rel="noreferrer">
+              <a href="https://www.linkedin.com/in/jinlinzhou-auao" target="_blank" rel="noopener noreferrer">
                 <Space>
                   <Image src="/images/linkedin-logo.png" width={80} preview={false} />
               https://www.linkedin.com/in/jinlinzhou-auao

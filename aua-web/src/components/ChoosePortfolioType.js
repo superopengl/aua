@@ -1,17 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Modal, Space, Divider } from 'antd';
+import { Typography, Modal, Space, Divider } from 'antd';
 import { UserOutlined, TeamOutlined } from '@ant-design/icons';
-import { listPortfolio, deletePortfolio } from 'services/portfolioService';
 import { Card } from 'antd';
 import { withRouter } from 'react-router-dom';
-import * as queryString from 'query-string';
 import PropTypes from 'prop-types';
 
 const { Title } = Typography;
-
-
-
 
 const StyledSpace = styled(Space)`
 svg, h3 {

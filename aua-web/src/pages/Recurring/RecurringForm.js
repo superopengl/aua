@@ -1,5 +1,4 @@
-import { Button, Form, Select, Space, Typography, InputNumber, Checkbox, Switch } from 'antd';
-import { PortfolioAvatar } from 'components/PortfolioAvatar';
+import { Button, Form, Select, Space, Typography, InputNumber } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 // import 'pages/AdminTask/node_modules/react-chat-elements/dist/main.css';
@@ -7,21 +6,13 @@ import { withRouter } from 'react-router-dom';
 import { listTaskTemplate } from 'services/taskTemplateService';
 import { listPortfolio } from 'services/portfolioService';
 import { getRecurring, saveRecurring } from 'services/recurringService';
-import styled from 'styled-components';
 import * as moment from 'moment';
 import { DateInput } from 'components/DateInput';
 import PortfolioSelect from 'components/PortfolioSelect';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
 
-const { Text, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
-const StyledPortfolioSelect = styled(Select)`
-  .ant-select-selector {
-    height: 50px !important;
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
-  }
-`;
 
 const RecurringForm = (props) => {
   const { id } = props;

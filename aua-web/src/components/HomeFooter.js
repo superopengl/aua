@@ -1,7 +1,6 @@
 import React from 'react';
 import { Layout, Row, Col } from 'antd';
 import styled from 'styled-components';
-import { Image } from 'antd';
 // import GitInfo from 'react-git-info/macro';
 
 const { Footer } = Layout;

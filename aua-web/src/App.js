@@ -30,7 +30,6 @@ import PortfolioFormPage from 'pages/Portfolio/PortfolioFormPage';
 import DeclarationPage from 'pages/DeclarationPage';
 import ClientDashboardPage from 'pages/ClientDashboard/ClientDashboardPage';
 import AdminStatsPage from 'pages/AdminStats/AdminStatsPage';
-import AdminBoardPage from 'pages/AdminBoard/AdminBoardPage';
 import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
 import BlogsPage from 'pages/BlogsPage';
 import ProfilePage from 'pages/Profile/ProfilePage';

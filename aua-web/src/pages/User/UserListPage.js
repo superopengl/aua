@@ -40,9 +40,6 @@ const LayoutStyled = styled(Layout)`
 
 
 const UserListPage = () => {
-
-  const [] = React.useState(false);
-  const [] = React.useState(false);
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [portfolioModalVisible, setPortfolioModalVisible] = React.useState(false);
   const [loading, setLoading] = React.useState(true);

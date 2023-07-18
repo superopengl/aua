@@ -1,24 +1,12 @@
 import React from 'react';
-import HomeRowArea from "./HomeRowArea";
 import styled from 'styled-components';
-import { Typography, Space, Row, Col, Descriptions } from 'antd';
-import { ServiceInfoCard } from 'components/ServiceInfoCard';
+import { Typography, Space } from 'antd';
 import { Image } from 'antd';
 import { Divider } from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
 import { useMediaQuery } from 'react-responsive';
 
-
 const { Paragraph, Title } = Typography;
-const ServiceTitle = styled.h1`
-  font-size: 2rem;
-  font-weight: 600;
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  color: '#383838';
-  text-align: center;
-`;
-
-
 
 const Container = styled.div`
 width: 100%;
@@ -48,38 +36,12 @@ justify-content: center;
 
 
 
-const HomeBossArea = prop => {
+const HomeBossArea = () => {
 
   const isTabletOrMobileDevice = useMediaQuery({
     query: '(max-device-width: 600px)'
   })
 
-  const span1 = {
-    xs: 24,
-    sm: 24,
-    md: 24,
-    lg: 12,
-    xl: 12,
-    xxl: 12
-  };
-
-  const span2 = {
-    xs: 24,
-    sm: 24,
-    md: 24,
-    lg: 12,
-    xl: 12,
-    xxl: 12
-  };
-
-  const span3 = {
-    xs: 24,
-    sm: 24,
-    md: 24,
-    lg: 8,
-    xl: 8,
-    xxl: 8
-  };
   return <Container>
     <InnerContainer>
       <Space style={{ maxWidth: 1200, alignItems: 'center' }} direction={isTabletOrMobileDevice ? 'vertical' : 'horizontal'} size="large">

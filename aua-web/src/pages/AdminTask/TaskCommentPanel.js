@@ -4,7 +4,6 @@ import { TimeAgo } from 'components/TimeAgo';
 import { GlobalContext } from 'contexts/GlobalContext';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { MessageBox } from 'react-chat-elements';
 import 'react-chat-elements/dist/main.css';
 import { withRouter } from 'react-router-dom';
 import { ChatService } from 'services/ChatService';

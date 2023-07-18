@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
 import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import PropTypes from 'prop-types';
-import { MailOutlined, MessageOutlined } from '@ant-design/icons';
 import { UnreadMessageIcon } from './UnreadMessageIcon';
 
 const StyledCard = styled(Card)`
