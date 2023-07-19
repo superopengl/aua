@@ -44,6 +44,7 @@ const MenuContianer = styled.div`
 float: right;
 // border: 0;
 margin-bottom: 2px;
+min-width: 580px;
 `;
 
 
